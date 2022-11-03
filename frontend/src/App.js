@@ -1,24 +1,19 @@
-import logo from './logo.svg';
+import { useState } from 'react'
+import { Container } from '@mui/material'
+import AppWindow from './Components/ApplicationWindow/AppWindow'
+import Authenticate from './Components/UserAuthentication/Authenticate';
 import './App.css';
 
 function App() {
+
+  const [isLoggedIn, setLoggedStatus] = useState(false)
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Container className="App">
+        {isLoggedIn ? (<AppWindow />) : (<Authenticate />)}
+      </Container>
+    </>
   );
 }
 
