@@ -2,4 +2,10 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding: 0.5rem 0rem;
+}
+.userImage{
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
 }

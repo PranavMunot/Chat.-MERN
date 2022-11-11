@@ -1,0 +1,14 @@
+.userList{
+    padding: 0.7rem;
+}
+.listUserImage{
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 7px;
+    display: flex;
+    margin: 0.7rem 0;
+}
+.list{
+    height: 80vh;
+    overflow:hidden auto;
+}

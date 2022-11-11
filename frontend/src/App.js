@@ -6,6 +6,7 @@ import { TypographyTheme } from './Utils/TypographyTheme';
 import './App.css';
 import { BrowserRouter as Router } from 'react-router-dom';
 import LoginContext from './State/loginContext/LoginContext';
+import axios from 'axios'
 
 function App() {
   const [user, setUser] = useState({})
@@ -14,8 +15,8 @@ function App() {
     setLogIn(true)
   }
   const logout = () => {
-    setLogIn(false)
-    setUser(null)
+    axios.get('http://localhost:4000/api/v1/logout').then(() => { setLogIn(false); setUser(null) }).catch((error => { console.log(error) }))
+
   }
 
   return (

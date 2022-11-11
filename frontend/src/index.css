@@ -2,8 +2,17 @@
 *{
     box-sizing: border-box;
     font-family: 'Nunito', sans-serif;
-}
-body,html{
     margin: 0;
     padding: 0;
 }
+a{
+    text-decoration: none;
+    color: inherit;
+}
+::-webkit-scrollbar {
+    width: 5px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #999;
+    border-radius: 5px;
+  }

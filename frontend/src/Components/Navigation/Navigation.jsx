@@ -14,7 +14,10 @@ function Navigation() {
                 <h2>Chat.</h2>
             </span>
             <span>
-                {auth.isAuthenticated?auth.user.user.name:(<Link to='/auth'><Button variant='outlined'>Login</Button></Link>)}
+                {auth.isAuthenticated?
+                (
+                    <img className='userImage' onClick={auth.logout} src={auth.user.user.photo.secure_url} alt='User Image'/>
+                ):(<Link to='/auth'><Button variant='outlined'>Login</Button></Link>)}
             </span>
         </nav>
     </div>
