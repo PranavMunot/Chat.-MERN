@@ -1,0 +1,39 @@
+.chatGrid{
+    display: grid;
+    height: 100%;
+    grid-template-rows: auto 1fr auto ;
+    border-left:1px solid rgba(235, 244, 245, 0.4); 
+    border-right:1px solid rgba(235, 244, 245, 0.4); 
+    background-color:  rgba(235, 244, 245, 0.4); 
+}
+.chatInfo{
+    padding: 0.7rem;
+    display: flex;
+    align-items: center;
+    border-bottom:1px solid rgba(235, 244, 245, 0.4);
+}
+.chatInfoImage{
+    width: 2.5rem;
+    border-radius: 7px;
+    height: 2.5rem;
+    margin-right: 1rem;
+}
+.chatInfoText{
+    display: flex;
+    flex-direction: column;
+}
+
+.messageScreen{
+    padding: 0 0.7rem 0.7rem;
+}
+.icon{
+    color:rgba(235, 244, 245);
+}
+
+.messageForm{
+    margin: 0.7rem;
+    display: flex;
+    justify-content: center;
+    border-radius: 7px;
+    border: 1px solid rgba(235, 244, 245, 0.4);
+}

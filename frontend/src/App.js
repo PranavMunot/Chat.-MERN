@@ -6,6 +6,7 @@ import { TypographyTheme } from './Utils/TypographyTheme';
 import './App.css';
 import { BrowserRouter as Router } from 'react-router-dom';
 import LoginContext from './State/loginContext/LoginContext';
+import lightTheme from './Utils/LightTheme';
 import axios from 'axios'
 
 function App() {
@@ -21,7 +22,9 @@ function App() {
 
   return (
     <>
-      <ThemeProvider theme={TypographyTheme}>
+      <ThemeProvider theme={lightTheme}>
+        {/* <ThemeProvider theme={TypographyTheme}> */}
+
         <Container className="App">
           <Router>
             <LoginContext.Provider value={{ isAuthenticated: isLoggedIn, user, setUser, login: login, logout: logout }}>
@@ -30,6 +33,7 @@ function App() {
           </Router>
         </Container>
       </ThemeProvider>
+      {/* </ThemeProvider> */}
     </>
   );
 }

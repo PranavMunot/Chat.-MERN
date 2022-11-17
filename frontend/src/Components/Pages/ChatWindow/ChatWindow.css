@@ -1,5 +1,6 @@
 .gridWindow{
-    height: 90vh;
+    height: 90vh; 
     overflow: hidden;
-    /* background-color: #f6f6f6; */
+    background: linear-gradient(120deg,#9bafd9,#103783);
+    border-radius: 15px;
 }

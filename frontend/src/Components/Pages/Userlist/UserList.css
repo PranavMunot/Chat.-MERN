@@ -1,14 +1,22 @@
 .userList{
     padding: 0.7rem;
+    padding-bottom: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 .listUserImage{
     width: 2.5rem;
     height: 2.5rem;
     border-radius: 7px;
     display: flex;
-    margin: 0.7rem 0;
+    /* margin: 0.7rem 0; */
 }
 .list{
-    height: 80vh;
     overflow:hidden auto;
+}
+.listItem{
+    border : 1px solid rgba(235, 244, 245, 0.4);
+    border-radius: 15px;
+    background-color:  rgba(235, 244, 245, 0.6);
 }
