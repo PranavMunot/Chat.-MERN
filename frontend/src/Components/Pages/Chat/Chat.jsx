@@ -1,12 +1,10 @@
 import React from "react";
 import "./Chat.css";
 import image from "../../../TestImages/cld-sample-2.jpg";
-import { IconButton, TextField, Typography } from "@mui/material";
-import { IoSend } from "react-icons/io5";
-import { CgSmileNeutral, CgSmileMouthOpen } from "react-icons/cg";
+import { Typography } from "@mui/material";
 import MessageScreen from "./MessageScreen";
+import MessageForm from "../MessageForm/MessageForm";
 import dummyMessages from "../../../DummyData/dummyMessages";
-const emojis = require("emojis-list");
 
 const ChatInfo = () => {
   return (
@@ -21,50 +19,14 @@ const ChatInfo = () => {
   );
 };
 
-const MessageForm = () => {
-  return (
-    <>
-      <IconButton size="medium">
-        <CgSmileNeutral className="icon" />
-      </IconButton>
-      <TextField
-        placeholder="Type your message here!"
-        variant="standard"
-        maxRows={5}
-        sx={{
-          border: "none",
-          display: "flex",
-          justifyContent: "center",
-          pl: 1,
-          pt: 0,
-        }}
-        size="small"
-        color="#103783"
-        multiline
-        fullWidth
-        InputProps={{
-          disableUnderline: true,
-        }}
-      />
-      <IconButton size="medium" sx={{ ml: 1 }}>
-        <IoSend className="icon" />
-      </IconButton>
-    </>
-  );
-};
-
 function Chat() {
   return (
     <div className="chatGrid">
       <div className="chatInfo">
         <ChatInfo />
       </div>
-
       <MessageScreen messages={dummyMessages} />
-
-      <div className="messageForm">
-        <MessageForm />
-      </div>
+      <MessageForm />
     </div>
   );
 }
