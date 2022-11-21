@@ -1,7 +1,7 @@
 .chatGrid{
     display: grid;
-    height: 100%;
-    grid-template-rows: auto 1fr auto ;
+    height: 90vh;
+    grid-template-rows: auto 1fr auto;
     border-left:1px solid rgba(235, 244, 245, 0.4); 
     border-right:1px solid rgba(235, 244, 245, 0.4); 
     background-color:  rgba(235, 244, 245, 0.4); 
@@ -23,11 +23,9 @@
     flex-direction: column;
 }
 
-.messageScreen{
-    padding: 0 0.7rem 0.7rem;
-}
+
 .icon{
-    color:rgba(235, 244, 245);
+    color:#103783;
 }
 
 .messageForm{
@@ -35,5 +33,6 @@
     display: flex;
     justify-content: center;
     border-radius: 7px;
+    background-color: rgba(235, 244, 245, 0.8);
     border: 1px solid rgba(235, 244, 245, 0.4);
 }

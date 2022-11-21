@@ -5,6 +5,7 @@ import { IconButton, TextField, Typography } from "@mui/material";
 import { IoSend } from "react-icons/io5";
 import { CgSmileNeutral, CgSmileMouthOpen } from "react-icons/cg";
 import MessageScreen from "./MessageScreen";
+import dummyMessages from "../../../DummyData/dummyMessages";
 const emojis = require("emojis-list");
 
 const ChatInfo = () => {
@@ -24,7 +25,7 @@ const MessageForm = () => {
   return (
     <>
       <IconButton size="medium">
-        <CgSmileNeutral />
+        <CgSmileNeutral className="icon" />
       </IconButton>
       <TextField
         placeholder="Type your message here!"
@@ -35,9 +36,10 @@ const MessageForm = () => {
           display: "flex",
           justifyContent: "center",
           pl: 1,
-          pb: 0,
+          pt: 0,
         }}
         size="small"
+        color="#103783"
         multiline
         fullWidth
         InputProps={{
@@ -57,9 +59,9 @@ function Chat() {
       <div className="chatInfo">
         <ChatInfo />
       </div>
-      <div className="messageScreen">
-        <MessageScreen />
-      </div>
+
+      <MessageScreen messages={dummyMessages} />
+
       <div className="messageForm">
         <MessageForm />
       </div>

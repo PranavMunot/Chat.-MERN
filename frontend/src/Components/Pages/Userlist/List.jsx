@@ -1,10 +1,8 @@
 import {
   Card,
   CardActionArea,
-  CardActions,
   CardContent,
   CardMedia,
-  Divider,
   Typography,
 } from "@mui/material";
 import React from "react";
@@ -20,6 +18,7 @@ const ListItem = () => {
         sx={{
           mb: 1.5,
           mr: 1.5,
+          backgroundColor: "rgba(235, 244, 245, 0.8)",
         }}
       >
         <CardActionArea
@@ -37,7 +36,12 @@ const ListItem = () => {
               pl: 2,
             }}
           >
-            <Typography component="div" fontWeight={"600"} variant="body1">
+            <Typography
+              color={"text.primary"}
+              component="div"
+              fontWeight={"600"}
+              variant="body1"
+            >
               User Name
             </Typography>
             <Typography

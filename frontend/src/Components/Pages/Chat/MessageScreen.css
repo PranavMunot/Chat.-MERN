@@ -1,0 +1,42 @@
+.messageScreen{
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 0 0.7rem 0.7rem;
+}
+.messageBox{
+    /* max-width: 400px; */
+    margin-top: 0.4rem ;
+    display: flex;
+    
+}
+.message{
+    max-width: 400px;
+    background-color: #00246c;
+    color:rgba(235, 244, 245);
+    padding: 0.5rem;
+    border-radius: 7px;
+}
+.self-message{
+    max-width: 400px;
+    background-color: #103783;
+    color:rgba(235, 244, 245);
+    padding: 0.5rem;
+    border-radius: 7px;
+}
+.justify-right{
+    justify-content: flex-end;
+}
+.border-right{
+    border-bottom-right-radius: 0px;
+}
+.border-left{
+    border-bottom-left-radius: 0px;
+
+}
+.justify-left{
+    justify-content: flex-start;
+}

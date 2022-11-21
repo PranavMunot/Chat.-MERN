@@ -1,4 +1,4 @@
-import { Divider, IconButton, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 import React from "react";
 import "./UserList.css";
 import List from "./List";
@@ -15,7 +15,6 @@ function UserList() {
         placeholder="Search User/ Group"
       />
 
-      {/* <Divider /> */}
       <List />
     </div>
   );

@@ -1,9 +1,9 @@
 import React from "react";
 import Chat from "../Chat/Chat";
-import Setting from "../Settings/Setting";
 import UserList from "../Userlist/UserList";
 import Navigation from "../../Navigation/Navigation";
-import { Divider, Grid } from "@mui/material";
+import { Grid } from "@mui/material";
+import ChatDetails from "../ChatDetails/ChatDetails";
 import "./ChatWindow.css";
 
 function ChatWindow() {
@@ -18,7 +18,7 @@ function ChatWindow() {
           <Chat />
         </Grid>
         <Grid item md={3}>
-          {/* <Setting /> */}
+          <ChatDetails />
         </Grid>
       </Grid>
     </>

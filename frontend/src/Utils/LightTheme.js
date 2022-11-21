@@ -9,12 +9,16 @@ const lightTheme = createTheme({
         secondary: {
             main: '#e0f2f1',
         },
+        text: {
+            primary: '#103783'
+        }
     },
     typography: {
-        fontFamily: 'Nunito',
+        fontFamily: 'Nunito'
     },
+
     shape: {
-        borderRadius: '15px',
+        borderRadius: '7px',
     },
 })
 
