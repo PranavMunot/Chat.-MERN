@@ -24,7 +24,6 @@ function App() {
     <>
       <ThemeProvider theme={lightTheme}>
         {/* <ThemeProvider theme={TypographyTheme}> */}
-
         <Container className="App">
           <Router>
             <LoginContext.Provider value={{ isAuthenticated: isLoggedIn, user, setUser, login: login, logout: logout }}>

@@ -1,10 +1,12 @@
 .userDashBoard{
+    position: relative;
     border: 1px solid rgba(0, 0, 0, 0.2);
     border-radius: 15px;
     display: flex;
+    background-color: white;
     height: 100%;
     flex-direction: column;
-    margin: 0 1rem ;
+    /* margin: 0 1rem ; */
     padding: 1rem;
 }
 .userProfileImageBox{

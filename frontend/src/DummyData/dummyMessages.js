@@ -83,6 +83,12 @@ const dummyMessages = [
         to: 'def',
         isSelf: false,
         text: "Hello!"
+    },
+    {
+        from: 'abc',
+        to: 'def',
+        isSelf: true,
+        text: "Hello 123 test!"
     }
 ]
 

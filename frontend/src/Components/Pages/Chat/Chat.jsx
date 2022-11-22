@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./Chat.css";
 import image from "../../../TestImages/cld-sample-2.jpg";
 import { Typography } from "@mui/material";
 import MessageScreen from "./MessageScreen";
 import MessageForm from "../MessageForm/MessageForm";
 import dummyMessages from "../../../DummyData/dummyMessages";
+import { useState } from "react";
 
 const ChatInfo = () => {
   return (
@@ -20,12 +21,17 @@ const ChatInfo = () => {
 };
 
 function Chat() {
+  const [messages, setMessages] = useState(dummyMessages);
+  useEffect(() => {
+    setMessages(dummyMessages);
+  }, [dummyMessages]);
+
   return (
     <div className="chatGrid">
       <div className="chatInfo">
         <ChatInfo />
       </div>
-      <MessageScreen messages={dummyMessages} />
+      <MessageScreen messages={messages} />
       <MessageForm />
     </div>
   );

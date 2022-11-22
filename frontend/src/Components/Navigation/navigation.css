@@ -9,3 +9,10 @@
     height: 2rem;
     border-radius: 7px;
 }
+.settingBar{
+    position: absolute;
+    z-index: 1000;
+    top:50px;
+    right: 1.5rem;
+    transition: 1s all ease-in-out;
+}
