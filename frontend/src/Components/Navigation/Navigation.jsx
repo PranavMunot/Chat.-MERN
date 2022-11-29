@@ -23,7 +23,11 @@ function Navigation() {
               onClick={() => {
                 setSettingToggle(!isSetting);
               }}
-              src={auth.user.user.photo.secure_url}
+              src={
+                auth.user.user.profilePhoto
+                  ? auth.user.user.profilePhoto.secure_url
+                  : ""
+              }
               alt="User Image"
             />
           ) : (

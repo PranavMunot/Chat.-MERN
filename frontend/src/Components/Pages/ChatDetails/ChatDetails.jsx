@@ -18,7 +18,13 @@ const ClientDetailBox = () => {
     <>
       <Box className="clientDetailBox">
         <Box
-          sx={{ backgroundImage: `url(${auth.user.user.photo.secure_url})` }}
+          sx={{
+            backgroundImage: `url(${
+              auth.user.user.profilePhoto
+                ? auth.user.user.profilePhoto.secure_url
+                : null
+            })`,
+          }}
           className={"clientImage"}
         />
         <Box className={"clientInfo"}>
