@@ -1,7 +1,14 @@
-import { Typography, Box, IconButton } from "@mui/material";
+import {
+  Typography,
+  Box,
+  IconButton,
+  Button,
+  ButtonGroup,
+} from "@mui/material";
 import React from "react";
 import "./RequestList.css";
 import { TbX, TbCheck } from "react-icons/tb";
+import { AiOutlineUserAdd } from "react-icons/ai";
 
 const ListComponent = () => {
   return (
@@ -46,10 +53,48 @@ const NoListItem = () => {
 function RequestList() {
   return (
     <div className="requestList">
-      <Typography variant="h4" sx={{ fontSize: "18px", py: 1 }}>
-        Requests
-      </Typography>
-      <ListComponent />
+      <div className="requestHeader">
+        <Typography variant="h4" sx={{ fontSize: "18px", py: 1 }}>
+          Requests
+        </Typography>
+        <span className="requestController">
+          <span>
+            <Typography
+              color={"primary"}
+              variant="h1"
+              sx={{ fontSize: "12px", display: "flex", alignItems: "center" }}
+            >
+              <AiOutlineUserAdd />
+              New
+            </Typography>
+          </span>
+        </span>
+      </div>
+      <div>
+        <ButtonGroup size="small" fullWidth sx={{ pb: 1 }}>
+          <Button>
+            <Typography
+              color={"primary"}
+              variant="h4"
+              sx={{ fontSize: "12px" }}
+            >
+              Sent
+            </Typography>
+          </Button>
+          <Button>
+            <Typography
+              color={"primary"}
+              variant="h4"
+              sx={{ fontSize: "12px" }}
+            >
+              Recieved
+            </Typography>
+          </Button>
+        </ButtonGroup>
+      </div>
+      <div>
+        <ListComponent />
+      </div>
       {/* <NoListItem /> */}
     </div>
   );

@@ -18,3 +18,28 @@
     align-items: flex-start;
     justify-content: center;
 }
+.requestHeader{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+.requestController{
+    display: flex;
+    align-items: flex-end;
+}
+.fullwidth{
+    width: 100%;
+    
+}
+.requestController span{
+    border: 1px solid rgba(16, 55, 131,0.4);
+    border-radius: 7px;
+    padding: 0.3rem;
+    cursor: pointer;
+    display: flex;
+    align-items:center ;
+}
+.requestController span:hover{
+    background-color: rgba(16, 55, 131,0.2);
+}

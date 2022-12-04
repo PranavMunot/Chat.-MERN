@@ -8,6 +8,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import LoginContext from './State/loginContext/LoginContext';
 import lightTheme from './Utils/LightTheme';
 import axios from 'axios'
+import Cookies from 'js-cookie';
 
 function App() {
   const [user, setUser] = useState({})
@@ -16,7 +17,7 @@ function App() {
     setLogIn(true)
   }
   const logout = () => {
-    axios.get('http://localhost:4000/api/v1/logout').then(() => { setLogIn(false); setUser(null) }).catch((error => { console.log(error) }))
+    axios.get('http://localhost:4000/api/v1/logout').then((data) => { console.log(data.data); Cookies.remove('token'); setLogIn(false); setUser(null) }).catch((error => { console.log(error.response.status, error.response.data); }))
 
   }
 

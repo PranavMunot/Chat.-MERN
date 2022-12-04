@@ -2,16 +2,7 @@ import React from "react";
 import "./Setting.css";
 import LoginContext from "../../../State/loginContext/LoginContext";
 import { useContext } from "react";
-import {
-  Box,
-  Divider,
-  ButtonGroup,
-  Button,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Typography,
-} from "@mui/material";
+import { Box, Divider, ButtonGroup, Button, Typography } from "@mui/material";
 
 import { format } from "date-fns";
 import RequestList from "../RequestList/RequestList";
@@ -38,6 +29,7 @@ function Setting() {
       <div className="userProfileInfo">
         <Typography component={"div"} variant="h3" sx={{ fontSize: "22px" }}>
           {auth.user.user.name}
+          <span className="chatCode">{auth.user.user.chatCode}</span>
         </Typography>
         <Typography
           component={"div"}

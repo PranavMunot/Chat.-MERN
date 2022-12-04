@@ -36,7 +36,7 @@ function Navigation() {
             </Link>
           )}
         </span>
-        {isSetting ? (
+        {isSetting && auth.isAuthenticated ? (
           <span className="settingBar">
             <Setting />
           </span>

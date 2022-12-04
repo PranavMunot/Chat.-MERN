@@ -52,16 +52,8 @@ const userSchema = new mongoose.Schema({
         default: 0
     },
     friendList: [{ type: mongoose.Types.ObjectId, ref: 'User' }],
-    recievedRequests: [{
-        id: { type: mongoose.Types.ObjectId, ref: 'User', required: true },
-        name: { type: String, required: true },
-        chatCode: { type: String, required: true },
-    }],
-    sentRequests: [{
-        id: { type: mongoose.Types.ObjectId, ref: 'User', required: true },
-        name: { type: String, required: true },
-        chatCode: { type: String, required: true },
-    }],
+    recievedRequests: [{ type: mongoose.Types.ObjectId, ref: 'User', required: true }],
+    sentRequests: [{ type: mongoose.Types.ObjectId, ref: 'User', required: true }],
     inGroups: [{ type: mongoose.Types.ObjectId, ref: 'Group' }]
 
 })
@@ -81,7 +73,7 @@ userSchema.methods.validateUserPassword = async function (passwordByUser) {
 }
 
 // create JWT
-userSchema.methods.createJWT = async function () {
+userSchema.methods.createJWT = function () {
     return jwt.sign(
         { id: this._id },
         process.env.JWT_SECRET_CODE,

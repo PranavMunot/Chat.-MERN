@@ -5,6 +5,7 @@ import axios from "axios";
 import LoginContext from "../../State/loginContext/LoginContext";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 function Authenticate() {
   const Login = () => {
@@ -12,6 +13,7 @@ function Authenticate() {
 
     const [Email, setEmail] = useState("");
     const [allData, setAllData] = useState(false);
+    const [Error, setError] = useState([false, ""]);
     const [Password, setPassword] = useState("");
 
     const auth = useContext(LoginContext);
@@ -22,37 +24,43 @@ function Authenticate() {
           email: Email,
           password: Password,
         })
-        .then((data) => {
-          auth.setUser(data.data);
+        .then(({ data }) => {
+          auth.setUser(data);
           auth.login();
+          const cookieOptions = {
+            expires: new Date(new Date(Date.now() + 1 * 24 * 60 * 60 * 1000)),
+            httpOnly: true,
+          };
+          console.log("setting cookies");
+          Cookies.set("token", data.token, { expires: 1, secure: true });
           navigate("/");
         })
         .catch((error) => {
           if (error.response) {
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
+            console.log(error.response.status, error.response.data);
+            setError([!Error[0], error.response.data.message]);
           } else if (error.request) {
-            // The request was made but no response was received
             console.log(error.request);
           } else {
-            // Something happened in setting up the request that triggered an Error
             console.log("Error", error.message);
           }
+          setEmail("");
+          setPassword("");
         });
     };
 
     const checkValidity = () => {
-      console.log(Email, Password);
+      // console.log(Email, Password);
     };
 
     const changeHandler = (e) => {
       if (e.target.name === "email") {
         setEmail(e.target.value);
-        // console.log(Email);
+        if (Error[0]) {
+          setError([!Error[0], ""]);
+        }
       } else {
         setPassword(e.target.value);
-        // console.log(Password);
       }
       checkValidity();
     };
@@ -83,6 +91,8 @@ function Authenticate() {
             type="password"
             size="small"
             id="passwordInput"
+            error={Error[0]}
+            helperText={Error[0] ? Error[1] : null}
             fullWidth
             variant="outlined"
             onChange={changeHandler}
