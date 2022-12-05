@@ -12,7 +12,7 @@ function Authenticate() {
     const navigate = useNavigate();
 
     const [Email, setEmail] = useState("");
-    const [allData, setAllData] = useState(false);
+    // const [allData, setAllData] = useState(false);
     const [Error, setError] = useState([false, ""]);
     const [Password, setPassword] = useState("");
 
@@ -27,11 +27,6 @@ function Authenticate() {
         .then(({ data }) => {
           auth.setUser(data);
           auth.login();
-          const cookieOptions = {
-            expires: new Date(new Date(Date.now() + 1 * 24 * 60 * 60 * 1000)),
-            httpOnly: true,
-          };
-          console.log("setting cookies");
           Cookies.set("token", data.token, { expires: 1, secure: true });
           navigate("/");
         })
@@ -105,7 +100,7 @@ function Authenticate() {
             sx={{ mt: 2 }}
             onClick={LoginHandler}
             variant="contained"
-            disabled={allData}
+            // disabled={allData}
           >
             Login
           </Button>
