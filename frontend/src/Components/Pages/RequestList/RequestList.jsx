@@ -4,8 +4,10 @@ import {
   IconButton,
   Button,
   ButtonGroup,
+  TextField,
+  Divider,
 } from "@mui/material";
-import React from "react";
+import React,{useState} from "react";
 import "./RequestList.css";
 import { TbX, TbCheck } from "react-icons/tb";
 import { AiOutlineUserAdd } from "react-icons/ai";
@@ -51,6 +53,13 @@ const NoListItem = () => {
 };
 
 function RequestList() {
+
+  const [chatCode,setChatCode] = useState('')
+
+  const changeHandler = (e) =>{
+    setChatCode(e.target.value)
+  }
+
   return (
     <div className="requestList">
       <div className="requestHeader">
@@ -70,6 +79,11 @@ function RequestList() {
           </span>
         </span>
       </div>
+      <Box sx={{display:'flex ', mb:1}}>
+        <TextField placeholder="Friend's Chat code" name='chatCode' onChange={changeHandler} value={chatCode} sx={{mr:1}} variant="outlined" size="small"/>
+        <Button variant="contained" size="small">Send</Button> 
+      </Box>
+      <Divider sx={{mb:1}} />
       <div>
         <ButtonGroup size="small" fullWidth sx={{ pb: 1 }}>
           <Button>
