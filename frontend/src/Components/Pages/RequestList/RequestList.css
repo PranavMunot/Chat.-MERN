@@ -1,8 +1,10 @@
-.requestList{
+.requestList {
     height: 50%;
+    width: 250px;
     /* padding: 0.7rem 0; */
 }
-.listComponent{
+
+.listComponent {
     border: 1px solid grey;
     padding: 0.5rem 0;
     border-radius: 7px;
@@ -11,35 +13,41 @@
     justify-content: space-between;
     /* margin: 1rem 0; */
 }
-.noListItem{
+
+.noListItem {
     height: 100%;
     display: flex;
     padding-top: 1rem;
     align-items: flex-start;
     justify-content: center;
 }
-.requestHeader{
+
+.requestHeader {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
 }
-.requestController{
+
+.requestController {
     display: flex;
     align-items: flex-end;
 }
-.fullwidth{
+
+.fullwidth {
     width: 100%;
-    
+
 }
-.requestController span{
-    border: 1px solid rgba(16, 55, 131,0.4);
+
+.requestController span {
+    border: 1px solid rgba(16, 55, 131, 0.4);
     border-radius: 7px;
     padding: 0.3rem;
     cursor: pointer;
     display: flex;
-    align-items:center ;
+    align-items: center;
 }
-.requestController span:hover{
-    background-color: rgba(16, 55, 131,0.2);
+
+.requestController span:hover {
+    background-color: rgba(16, 55, 131, 0.2);
 }

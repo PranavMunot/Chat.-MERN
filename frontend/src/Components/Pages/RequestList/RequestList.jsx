@@ -4,9 +4,8 @@ import {
   IconButton,
   Button,
   ButtonGroup,
-  TextField,
 } from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
 import "./RequestList.css";
 import { TbX, TbCheck } from "react-icons/tb";
 import { AiOutlineUserAdd } from "react-icons/ai";
@@ -52,12 +51,6 @@ const NoListItem = () => {
 };
 
 function RequestList() {
-  const [isTextfieldOpen, setTextfieldOpen] = useState(false);
-  const [enteredChatCode, setEnteredChatCode] = useState("");
-  const toggleHandler = () => {
-    setTextfieldOpen(!isTextfieldOpen);
-  };
-
   return (
     <div className="requestList">
       <div className="requestHeader">
@@ -77,17 +70,6 @@ function RequestList() {
           </span>
         </span>
       </div>
-      <Box sx={{ py: 1 }}>
-        <TextField
-          maxlength={4}
-          variant="outlined"
-          placeholder="chat code"
-          size="small"
-        />
-        <Button sx={{ ml: 1 }} variant="outlined">
-          Send
-        </Button>
-      </Box>
       <div>
         <ButtonGroup size="small" fullWidth sx={{ pb: 1 }}>
           <Button>
