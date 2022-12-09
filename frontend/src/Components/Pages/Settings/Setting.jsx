@@ -5,7 +5,7 @@ import { useContext } from "react";
 import { Box, Divider, ButtonGroup, Button, Typography } from "@mui/material";
 
 import { format } from "date-fns";
-import RequestList from "../RequestList/RequestList";
+import Requests from "../RequestList/Requests";
 
 function Setting() {
   const auth = useContext(LoginContext);
@@ -63,7 +63,7 @@ function Setting() {
         </Button>
       </ButtonGroup>
       <Divider />
-      <RequestList />
+      <Requests />
     </div>
   );
 }

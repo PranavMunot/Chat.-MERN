@@ -20,13 +20,9 @@ exports.login = async (req, res, next) => {
 
 exports.logout = async (req, res, next) => {
 
-    console.log('hello')
-
-    // res.cookie('token', null, {
-    //     expires: new Date(Date.now()), httpOnly: true
-    // })
-
-    console.log('here')
+    res.cookie('token', null, {
+        expires: new Date(Date.now()), httpOnly: true
+    })
 
     return res.status(200).json({
         success: 'true',
@@ -97,14 +93,38 @@ exports.sendFriendRequest = async (req, res, next) => {
         return errorMessage(res, 400, 'Cannot find your friend in Chat.')
     }
 
-    user.sentRequests.push(requestedUser.id)
-    requestedUser.recievedRequests.push(user.id)
 
-    await user.save()
-    await requestedUser.save()
+    const requestPush = await Promise.all([
+        user.sentRequests.push(requestedUser.id)
+        , requestedUser.recievedRequests.push(user.id)])
 
-    res.status(200).json({
+    const updatedUserList = await Promise.all([user.save(), requestedUser.save()])
+
+    requestPush && updatedUserList ? res.status(200).json({
         success: true,
         message: 'Request sent!'
+    }) : res.status(400).json({
+        success: false,
+        message: 'Error Posting data!'
+    })
+
+}
+
+exports.getSentRequest = async (req, res, next) => {
+    const list = await req.user.sentRequests
+    const data = []
+    await User.find({ _id: { $in: list } }).select(['name', 'chatCode']).lean().then(res => data.push(...res)).catch(err => { console.log(err) })
+    res.status(200).json({
+        success: true,
+        data
+    })
+}
+exports.getRecievedRequest = async (req, res, next) => {
+    const list = await req.user.recievedRequests
+    const data = []
+    await User.find({ _id: { $in: list } }).then(res => data.push(...res)).catch(err => { console.log(err) })
+    res.status(200).json({
+        success: true,
+        data
     })
 }
