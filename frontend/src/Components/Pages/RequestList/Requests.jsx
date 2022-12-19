@@ -8,56 +8,26 @@ import {
   ButtonGroup,
 } from "@mui/material";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+
+import axios from 'axios';
 import "./Requests.css";
-import { TbX, TbCheck } from "react-icons/tb";
+import ListComponent from "./ListComponent";
 import { AiOutlineUserAdd } from "react-icons/ai";
 
-const ListComponent = () => {
-  return (
-    <Box className="listComponent">
-      <Box sx={{ px: 1, justifyContent: "center" }}>
-        <Typography variant="body" component={"div"} sx={{ lineHeight: 1 }}>
-          Pranav Munot
-        </Typography>
-        <Typography
-          variant="caption"
-          color={"text.secondary"}
-          sx={{ fontSize: "12px", lineHeight: 0.5 }}
-        >
-          v56tfd
-        </Typography>
-      </Box>
-      <Box>
-        <IconButton sx={{ color: "crimson" }}>
-          <TbX />
-        </IconButton>
-        <IconButton sx={{ color: "green", mr: 1 }}>
-          <TbCheck />
-        </IconButton>
-      </Box>
-    </Box>
-  );
-};
-
-const NoListItem = () => {
-  return (
-    <div className="noListItem">
-      <Typography
-        sx={{ fontSize: "12px", textAlign: "center" }}
-        color="text.secondary"
-      >
-        👦👧Seriously No Requests?😺🐶
-      </Typography>
-    </div>
-  );
-};
 
 function Requests() {
   const [chatCode, setChatCode] = useState("");
   const [openChatCodeSection, setChatCodeSection] = useState(false);
   const [isChatCodeValid, setChatCodeValidity] = useState(false);
   const [requestListStatus, setRequestListStatus] = useState("sent");
+  const [requestListData, setRequestListData] = useState({ isLoading: true, sent: [], recieved: [] })
+
+  useEffect(() => {
+    axios.get(`http://localhost:4000/api/v1/getRequests`)
+      .then(res => { setRequestListData({ isLoading: true, sent: res.data.sent, recieved: res.data.recieved }) })
+      .catch(err => { console.log(err) })
+  }, [requestListData])
 
   const changeHandler = (e) => {
     setChatCode(e.target.value);
@@ -116,22 +86,21 @@ function Requests() {
 
       <div>
         <ButtonGroup size="small" fullWidth sx={{ pb: 1 }}>
-          <Button>
+          <Button onClick={() => { setRequestListStatus("sent") }} >
             <Typography
               color={"primary"}
               variant="h4"
               sx={{ fontSize: "12px" }}
-              onClick={setRequestListStatus("sent")}
+
             >
               Sent
             </Typography>
           </Button>
-          <Button>
+          <Button onClick={() => { setRequestListStatus("recieved") }}>
             <Typography
               color={"primary"}
               variant="h4"
               sx={{ fontSize: "12px" }}
-              onClick={setRequestListStatus("recieved")}
             >
               Recieved
             </Typography>
@@ -139,7 +108,9 @@ function Requests() {
         </ButtonGroup>
       </div>
       <div>
-        {requestListStatus === "sent" ? <ListComponent /> : <ListComponent />}
+
+        {/* <ListComponent List={requestListData.recieved} /> */}
+        {requestListStatus === "sent" ? <ListComponent List={requestListData.sent} /> : <ListComponent List={requestListData.recieved} />}
       </div>
     </div>
   );

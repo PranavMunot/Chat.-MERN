@@ -68,13 +68,26 @@ exports.signup = async (req, res, next) => {
     user.password = undefined
 
     res.status(201).json({
+
         success: true,
         token,
         user
     })
+}
 
-    console.log('Hello')
+exports.getUser = async (req, res, next) => {
+    const user = req.user
+    if (!user) {
+        return res.status(403).json({
+            success: false,
+            message: 'No user Found'
+        })
+    }
 
+    return res.status(200).json({
+        success: false,
+        user
+    })
 }
 
 exports.sendFriendRequest = async (req, res, next) => {
@@ -110,21 +123,23 @@ exports.sendFriendRequest = async (req, res, next) => {
 
 }
 
-exports.getSentRequest = async (req, res, next) => {
-    const list = await req.user.sentRequests
-    const data = []
-    await User.find({ _id: { $in: list } }).select(['name', 'chatCode']).lean().then(res => data.push(...res)).catch(err => { console.log(err) })
+exports.getRequests = async (req, res, next) => {
+    const [sentList, recievedList] = await [req.user.sentRequests, req.user.recievedRequests]
+
+    const [sent, recieved] = await Promise.all(
+        [User.find({ _id: { $in: sentList } })
+            .select(['name', 'chatCode'])
+            .lean()
+            ,
+        User.find({ _id: { $in: recievedList } })
+            .select(['name', 'chatCode'])
+            .lean()
+        ])
+
+    console.log(sent, recieved)
+
     res.status(200).json({
         success: true,
-        data
-    })
-}
-exports.getRecievedRequest = async (req, res, next) => {
-    const list = await req.user.recievedRequests
-    const data = []
-    await User.find({ _id: { $in: list } }).then(res => data.push(...res)).catch(err => { console.log(err) })
-    res.status(200).json({
-        success: true,
-        data
+        sent, recieved
     })
 }

@@ -16,8 +16,8 @@ function App() {
   const login = () => {
     setLogIn(true)
   }
-  const logout = () => {
-    axios.get('http://localhost:4000/api/v1/logout').then((data) => { console.log(data.data); Cookies.remove('token'); setLogIn(false); setUser(null) }).catch((error => { console.log(error.response.status, error.response.data); }))
+  const logout = async () => {
+    await axios.get('http://localhost:4000/api/v1/logout').then((data) => { console.log(data.data); Cookies.remove('token'); setLogIn(false); setUser(null) }).catch((error => { console.log(error.response.status, error.response.data); }))
 
   }
 

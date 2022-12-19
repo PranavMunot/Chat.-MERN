@@ -5,6 +5,7 @@ import App from './App';
 import axios from 'axios'
 import Cookies from 'js-cookie';
 
+
 axios.interceptors.request.use(
   config => {
     const getTokenFromCookie = Cookies.get('token')
