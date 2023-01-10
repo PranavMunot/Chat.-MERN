@@ -10,20 +10,22 @@ import Requests from "../RequestList/Requests";
 function Setting() {
   const auth = useContext(LoginContext);
 
+
   const logoutHandler = () => {
     auth.logout();
   };
+
+
 
   return (
     <div className="userDashBoard">
       <Box
         className="userProfileImageBox"
         sx={{
-          backgroundImage: `url('${
-            auth.user.user.profilePhoto
-              ? auth.user.user.profilePhoto.secure_url
-              : null
-          }')`,
+          backgroundImage: `url('${auth.user.user.profilePhoto
+            ? auth.user.user.profilePhoto.secure_url
+            : null
+            }')`,
         }}
       />
       <div className="userProfileInfo">

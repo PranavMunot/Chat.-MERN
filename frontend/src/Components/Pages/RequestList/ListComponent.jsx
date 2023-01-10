@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from 'axios'
 import "./Requests.css";
 import {
     Typography,
@@ -20,13 +21,23 @@ const NoListItem = () => {
     );
 };
 
-const ListComponent = ({ List }) => {
+const ListComponent = ({ listType }) => {
+
+    const [requestListData, setRequestListData] = useState({ isLoading: true, sent: [], recieved: [] })
+
+    useEffect(() => {
+        axios.get(`http://localhost:4000/api/v1/getRequests`)
+            .then(res => { setRequestListData({ isLoading: false, sent: res.data.sent, recieved: res.data.recieved }) })
+            .catch(err => { console.log(`Error in getting GET REQUESST API: ${err}`) })
+    }, [])
+
     return (
         <>
+
             {
-                List.length > 0 ? List.map(listData => {
+                requestListData[listType].length > 0 ? requestListData[listType].map(listData => {
                     return (
-                        <Box className="listComponent">
+                        <Box key={listData.chatCode} className="listComponent">
                             <Box sx={{ px: 1, justifyContent: "center" }}>
                                 <Typography variant="body" component={"div"} sx={{ lineHeight: 1 }}>
                                     {listData.name}
@@ -54,11 +65,6 @@ const ListComponent = ({ List }) => {
         </>
     )
 
-
 };
 
-
 export default ListComponent;
-
-// 
-{/*  */ }

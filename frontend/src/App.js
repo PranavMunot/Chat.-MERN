@@ -1,8 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Container } from '@mui/material'
 import AppController from './Components/ApplicationWindow/AppController'
 import { ThemeProvider } from '@mui/material/styles';
-import { TypographyTheme } from './Utils/TypographyTheme';
 import './App.css';
 import { BrowserRouter as Router } from 'react-router-dom';
 import LoginContext from './State/loginContext/LoginContext';
@@ -16,6 +15,15 @@ function App() {
   const login = () => {
     setLogIn(true)
   }
+
+  useEffect(() => {
+    const userToken = Cookies.get('token')
+    if (userToken) {
+      const user = axios.get('')
+    }
+
+  }, [])
+
   const logout = async () => {
     await axios.get('http://localhost:4000/api/v1/logout').then((data) => { console.log(data.data); Cookies.remove('token'); setLogIn(false); setUser(null) }).catch((error => { console.log(error.response.status, error.response.data); }))
 

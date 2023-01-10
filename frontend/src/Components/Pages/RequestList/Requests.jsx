@@ -8,9 +8,7 @@ import {
   ButtonGroup,
 } from "@mui/material";
 
-import React, { useState, useEffect } from "react";
-
-import axios from 'axios';
+import React, { useState } from "react";
 import "./Requests.css";
 import ListComponent from "./ListComponent";
 import { AiOutlineUserAdd } from "react-icons/ai";
@@ -21,13 +19,8 @@ function Requests() {
   const [openChatCodeSection, setChatCodeSection] = useState(false);
   const [isChatCodeValid, setChatCodeValidity] = useState(false);
   const [requestListStatus, setRequestListStatus] = useState("sent");
-  const [requestListData, setRequestListData] = useState({ isLoading: true, sent: [], recieved: [] })
 
-  useEffect(() => {
-    axios.get(`http://localhost:4000/api/v1/getRequests`)
-      .then(res => { setRequestListData({ isLoading: true, sent: res.data.sent, recieved: res.data.recieved }) })
-      .catch(err => { console.log(err) })
-  }, [requestListData])
+
 
   const changeHandler = (e) => {
     setChatCode(e.target.value);
@@ -35,6 +28,9 @@ function Requests() {
       ? setChatCodeValidity(true)
       : setChatCodeValidity(false);
   };
+
+
+
   return (
     <div className="requestList">
       <div className="requestHeader">
@@ -108,9 +104,7 @@ function Requests() {
         </ButtonGroup>
       </div>
       <div>
-
-        {/* <ListComponent List={requestListData.recieved} /> */}
-        {requestListStatus === "sent" ? <ListComponent List={requestListData.sent} /> : <ListComponent List={requestListData.recieved} />}
+        <ListComponent listType={requestListStatus} />
       </div>
     </div>
   );
