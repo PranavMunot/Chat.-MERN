@@ -10,7 +10,7 @@ const { login, signup, logout, sendFriendRequest, getRequests, getUser } = requi
 
 router.route('/login').post(login)
 router.route('/logout').get(isLoggedIn, logout)
-router.route('/logout').get(isLoggedIn, getUser)
+router.route('/getUser').get(isLoggedIn, getUser)
 router.route('/signup').post(signup)
 router.route('/sendRequest').post(isLoggedIn, sendFriendRequest)
 router.route('/getRequests').get(isLoggedIn, getRequests)

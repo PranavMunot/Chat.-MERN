@@ -19,7 +19,9 @@ function App() {
   useEffect(() => {
     const userToken = Cookies.get('token')
     if (userToken) {
-      const user = axios.get('')
+      console.log(userToken)
+      axios.get('http://localhost:4000/api/v1/getUser')
+        .then((({ data }) => { setUser(data); login(); console.log(data) })).catch(err => { console.log(err) })
     }
 
   }, [])
