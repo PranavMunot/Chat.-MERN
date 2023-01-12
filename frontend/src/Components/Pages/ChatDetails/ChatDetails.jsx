@@ -19,11 +19,10 @@ const ClientDetailBox = () => {
       <Box className="clientDetailBox">
         <Box
           sx={{
-            backgroundImage: `url(${
-              auth.user.user.profilePhoto
+            backgroundImage: `url(${auth.user.user.profilePhoto
                 ? auth.user.user.profilePhoto.secure_url
                 : null
-            })`,
+              })`,
           }}
           className={"clientImage"}
         />
@@ -108,7 +107,7 @@ const MediaController = () => {
 const OnClientActions = () => {
   return (
     <>
-      <Button variant="contained" size="small" color="error" acc>
+      <Button variant="contained" size="small" color="error">
         Remove Friend
       </Button>
     </>

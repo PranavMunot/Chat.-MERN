@@ -9,27 +9,29 @@ import lightTheme from './Utils/LightTheme';
 import axios from 'axios'
 import Cookies from 'js-cookie';
 
+
 function App() {
   const [user, setUser] = useState({})
   const [isLoggedIn, setLogIn] = useState(false)
+
+
   const login = () => {
     setLogIn(true)
+  }
+  const logout = async () => {
+    await axios.get('http://localhost:4000/api/v1/logout').then((data) => { console.log(data.data); Cookies.remove('token'); setLogIn(false); setUser(null) }).catch((error => { console.log(error.response.status, error.response.data); }))
+
   }
 
   useEffect(() => {
     const userToken = Cookies.get('token')
     if (userToken) {
-      console.log(userToken)
       axios.get('http://localhost:4000/api/v1/getUser')
-        .then((({ data }) => { setUser(data); login(); console.log(data) })).catch(err => { console.log(err) })
+        .then((({ data }) => { setUser(data); login(); })).catch(err => { console.log(err) })
     }
 
+
   }, [])
-
-  const logout = async () => {
-    await axios.get('http://localhost:4000/api/v1/logout').then((data) => { console.log(data.data); Cookies.remove('token'); setLogIn(false); setUser(null) }).catch((error => { console.log(error.response.status, error.response.data); }))
-
-  }
 
   return (
     <>

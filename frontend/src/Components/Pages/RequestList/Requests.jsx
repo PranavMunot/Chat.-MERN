@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 
 import React, { useState } from "react";
+import axios from 'axios'
 import "./Requests.css";
 import ListComponent from "./ListComponent";
 import { AiOutlineUserAdd } from "react-icons/ai";
@@ -19,6 +20,7 @@ function Requests() {
   const [openChatCodeSection, setChatCodeSection] = useState(false);
   const [isChatCodeValid, setChatCodeValidity] = useState(false);
   const [requestListStatus, setRequestListStatus] = useState("sent");
+  const [helperMessage, setHelperMessage] = useState({ isShowing: false, message: '' })
 
 
 
@@ -29,6 +31,33 @@ function Requests() {
       : setChatCodeValidity(false);
   };
 
+  const sendRequest = async () => {
+    await axios.post('http://localhost:4000/api/v1/sendRequest', { chatCode }).then(
+      ({ data }) => {
+        console.log(data)
+        if (data.success) {
+          setChatCode('')
+          setChatCodeValidity(false)
+          setHelperMessage({ isShowing: true, message: data.message })
+          setTimeout(() => {
+            setHelperMessage({ isShowing: false, message: '' })
+          }, 3000)
+        }
+        else {
+          setHelperMessage({ isShowing: true, message: data.message })
+          setTimeout(() => {
+            setHelperMessage({ isShowing: false, message: '' })
+          }, 3000)
+        }
+      }
+    ).catch(err => {
+      console.log(err)
+      setHelperMessage({ isShowing: true, message: 'Error in sending request!' })
+      setTimeout(() => {
+        setHelperMessage({ isShowing: false, message: '' })
+      }, 3000)
+    })
+  }
 
 
   return (
@@ -71,10 +100,19 @@ function Requests() {
               disableElevation
               variant="contained"
               size="small"
+              onClick={sendRequest}
             >
               Send
             </Button>
           </Box>
+          {helperMessage.isShowing ? (
+            <Box>
+              <Typography variant='caption' fontSize={'12px'}>
+                {helperMessage.message}
+              </Typography>
+            </Box>
+          ) : null}
+
         </>
       ) : null}
 

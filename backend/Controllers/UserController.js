@@ -100,12 +100,19 @@ exports.sendFriendRequest = async (req, res, next) => {
         return errorMessage(res, 401, 'Cannot send request to same user!')
     }
 
+
+
     const requestedUser = await User.findOne({ chatCode })
 
     if (!requestedUser) {
         return errorMessage(res, 400, 'Cannot find your friend in Chat.')
     }
 
+    // check if user has already requested for same user
+
+    // if(requestedUser.chatCode chatCode){
+
+    // }
 
     const requestPush = await Promise.all([
         user.sentRequests.push(requestedUser.id)
@@ -118,7 +125,7 @@ exports.sendFriendRequest = async (req, res, next) => {
         message: 'Request sent!'
     }) : res.status(400).json({
         success: false,
-        message: 'Error Posting data!'
+        message: 'Error sending request!'
     })
 
 }
@@ -136,10 +143,51 @@ exports.getRequests = async (req, res, next) => {
             .lean()
         ])
 
-    console.log(sent, recieved)
+    // console.log(sent, recieved)
 
     res.status(200).json({
         success: true,
         sent, recieved
+    })
+}
+
+exports.acceptRequest = async (req, res, next) => {
+    const { chatCode, acceptStatus } = req.body
+
+    // find user with chatCode
+    const [user, recieverUser] = await Promise.all([User.findById(req.user.id), User.findOne({ chatCode })])
+
+    if ((!user || !recieverUser) || (user.chatCode === recieverUser.chatCode)) return res.status(400).json({ success: false, message: 'Operation Failed! User Chat Code Error.' })
+
+    if (acceptStatus) {
+
+        // inc no of friends
+        user.noOfFriends += 1
+        recieverUser.noOfFriends += 1
+
+        // add both friend list
+        await User.updateOne({ _id: user._id }, { $push: { friendList: [recieverUser.id] } })
+        await User.updateOne({ _id: recieverUser._id }, { $push: { friendList: [user.id] } })
+
+        // remove from req as well as sent list
+        await User.updateOne({ _id: user.id }, { $pullAll: { recievedRequests: [recieverUser._id] } })
+        await User.updateOne({ _id: recieverUser.id }, { $pullAll: { sentRequests: [user._id] } })
+
+        const [sent, recieved] = await Promise.all([user.save(), recieverUser.save()])
+
+    } else {
+
+        await User.updateOne({ _id: user.id }, { $pullAll: { recievedRequests: [recieverUser._id] } })
+        await User.updateOne({ _id: recieverUser.id }, { $pullAll: { sentRequests: [user._id] } })
+
+        const [sent, recieved] = await Promise.all([user.save(), recieverUser.save()])
+
+
+    }
+
+
+    res.status(200).json({
+        success: true,
+        message: `You ${acceptStatus ? 'accepted' : 'rejected'} ${recieverUser.chatCode}'s request`
     })
 }

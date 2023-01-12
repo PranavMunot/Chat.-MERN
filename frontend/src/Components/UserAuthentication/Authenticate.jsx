@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import "./Authenticate.css";
 import axios from "axios";
 import LoginContext from "../../State/loginContext/LoginContext";
-import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 
@@ -12,7 +11,6 @@ function Authenticate() {
     const navigate = useNavigate();
 
     const [Email, setEmail] = useState("");
-    // const [allData, setAllData] = useState(false);
     const [Error, setError] = useState([false, ""]);
     const [Password, setPassword] = useState("");
 
@@ -100,7 +98,7 @@ function Authenticate() {
             sx={{ mt: 2 }}
             onClick={LoginHandler}
             variant="contained"
-            // disabled={allData}
+          // disabled={allData}
           >
             Login
           </Button>
@@ -112,7 +110,7 @@ function Authenticate() {
     );
   };
 
-  const Signup = () => {};
+  const Signup = () => { };
 
   return <div className="AuthBox">{true ? <Login /> : <Signup />}</div>;
 }

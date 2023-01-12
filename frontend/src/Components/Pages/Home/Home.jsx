@@ -1,6 +1,6 @@
-import React,{useContext} from 'react'
+import React, { useContext } from 'react'
 import LoginContext from '../../../State/loginContext/LoginContext'
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import Navigation from '../../Navigation/Navigation'
 
 function Home() {
@@ -10,7 +10,7 @@ function Home() {
   return (
     <div>
       <Navigation />
-      {!auth.isAuthenticated?'Not Logged In':(<Link to={'/chat/:123'}><p>To User Page</p></Link>)}
+      {!auth.isAuthenticated ? 'Not Logged In' : (<Link to={`/chat/${auth.user.user.chatCode}`}><p>To User Page</p></Link>)}
     </div>
   )
 }

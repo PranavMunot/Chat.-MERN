@@ -15,8 +15,6 @@ function Setting() {
     auth.logout();
   };
 
-
-
   return (
     <div className="userDashBoard">
       <Box
