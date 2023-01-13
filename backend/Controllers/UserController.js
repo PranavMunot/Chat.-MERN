@@ -100,19 +100,23 @@ exports.sendFriendRequest = async (req, res, next) => {
         return errorMessage(res, 401, 'Cannot send request to same user!')
     }
 
-
-
     const requestedUser = await User.findOne({ chatCode })
 
     if (!requestedUser) {
         return errorMessage(res, 400, 'Cannot find your friend in Chat.')
     }
 
-    // check if user has already requested for same user
+    // check if user has already requested for same user or already a friend
+    //, 
+    const userData = await Promise.all([
+        User.find({ _id: user.id, friendList: { $in: [requestedUser.id] } }).count(),
+        User.find({ _id: user.id, sentRequests: { $in: [requestedUser.id] } }).count(),
+        User.find({ _id: user.id, recievedRequests: { $in: [requestedUser.id] } }).count(),
+    ])
 
-    // if(requestedUser.chatCode chatCode){
-
-    // }
+    if ((userData[0] + userData[1] + userData[2]) > 0) {
+        return errorMessage(res, 401, 'User already your friend or requested the friend')
+    }
 
     const requestPush = await Promise.all([
         user.sentRequests.push(requestedUser.id)
