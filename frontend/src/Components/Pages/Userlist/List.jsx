@@ -5,11 +5,13 @@ import {
   CardMedia,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import image from "../../../TestImages/cld-sample-2.jpg";
 import "./UserList.css";
+import LoginContext from "../../../State/loginContext/LoginContext";
+import axios from "axios";
 
-const ListItem = () => {
+const ListItem = ({ friendName, friendChatCode, friendProfilePhoto }) => {
   return (
     <>
       <Card
@@ -25,7 +27,7 @@ const ListItem = () => {
           sx={{ display: "flex", justifyContent: "left", p: 1.5 }}
         >
           <CardMedia>
-            <img src={image} className="listUserImage" alt="userImage" />
+            <img src={friendProfilePhoto ? friendProfilePhoto.secure_url : image} className="listUserImage" alt="userImage" />
           </CardMedia>
           <CardContent
             sx={{
@@ -42,44 +44,44 @@ const ListItem = () => {
               fontWeight={"600"}
               variant="body1"
             >
-              User Name
+              {friendName}
             </Typography>
             <Typography
               textOverflow="clip"
               variant="caption"
               color={"text.secondary"}
             >
-              ***v54
+              {friendChatCode}
             </Typography>
           </CardContent>
         </CardActionArea>
       </Card>
-      {/* <Divider /> */}
     </>
   );
 };
 
 function List() {
+
+  const auth = useContext(LoginContext)
+  const [userFriendList, setUserFriendList] = useState({ isLoading: true, data: [] })
+
+  useEffect(() => {
+    (async () => {
+      await axios.get('http://localhost:4000/api/v1/getMultipleUsersById').then(
+        ({ data }) => { setUserFriendList({ isLoading: false, data: data.data }) }
+      ).catch(err => { console.log(err) })
+    })()
+  }, [auth])
+
   return (
     <div className="list">
-      <ListItem />
-      <ListItem />
-      <ListItem />
-      <ListItem />
-      <ListItem />
-      <ListItem />
-      <ListItem />
-      <ListItem />
-      <ListItem />
-      <ListItem />
-      <ListItem />
-      <ListItem />
-      <ListItem />
-      <ListItem />
-      <ListItem />
-      <ListItem />
-      <ListItem />
-      <ListItem />
+      {!userFriendList.isLoading && userFriendList.data.length > 0 ?
+        userFriendList.data.map((friendData) => (<ListItem key={friendData.chatCode} friendName={friendData.name} friendProfilePhoto={friendData.profilePhoto} friendChatCode={`***${friendData.chatCode.slice(3)}`} />))
+        : (
+          <>
+            {userFriendList.isLoading ? (<Typography variant='h1'>Loading</Typography>) : (<Typography variant='h1'>No Friends</Typography>)}
+          </>
+        )}
     </div>
   );
 }

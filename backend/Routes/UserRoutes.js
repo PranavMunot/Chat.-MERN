@@ -6,11 +6,12 @@ const router = express.Router()
 const { isLoggedIn } = require('../Middleware/userMiddlewares')
 
 // import Controllers
-const { login, signup, logout, sendFriendRequest, getRequests, getUser, acceptRequest } = require('../Controllers/UserController')
+const { login, signup, logout, sendFriendRequest, getRequests, getUser, acceptRequest, getMultipleUsersById } = require('../Controllers/UserController')
 
 router.route('/login').post(login)
 router.route('/logout').get(isLoggedIn, logout)
 router.route('/getUser').get(isLoggedIn, getUser)
+router.route('/getMultipleUsersById').get(isLoggedIn, getMultipleUsersById)
 router.route('/signup').post(signup)
 router.route('/sendRequest').post(isLoggedIn, sendFriendRequest)
 router.route('/getRequests').get(isLoggedIn, getRequests)

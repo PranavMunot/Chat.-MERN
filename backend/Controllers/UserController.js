@@ -85,8 +85,29 @@ exports.getUser = async (req, res, next) => {
     }
 
     return res.status(200).json({
-        success: false,
+        success: true,
         user
+    })
+}
+
+exports.getMultipleUsersById = async (req, res, next) => {
+    const user = req.user
+    if (!user) {
+        return res.status(403).json({
+            success: false,
+            message: 'No user Found'
+        })
+    }
+
+
+    const response = await User.find({
+        '_id': { $in: user.friendList }
+    }).select(['name', 'chatCode', 'profilePhoto']).lean()
+
+
+    return res.status(200).json({
+        success: true,
+        data: response
     })
 }
 
@@ -107,7 +128,7 @@ exports.sendFriendRequest = async (req, res, next) => {
     }
 
     // check if user has already requested for same user or already a friend
-    //, 
+
     const userData = await Promise.all([
         User.find({ _id: user.id, friendList: { $in: [requestedUser.id] } }).count(),
         User.find({ _id: user.id, sentRequests: { $in: [requestedUser.id] } }).count(),
@@ -195,3 +216,4 @@ exports.acceptRequest = async (req, res, next) => {
         message: `You ${acceptStatus ? 'accepted' : 'rejected'} ${recieverUser.chatCode}'s request`
     })
 }
+

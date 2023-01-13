@@ -16,3 +16,8 @@
     right: 1.5rem;
     transition: 1s all ease-in-out;
 }
+.navigation_list{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

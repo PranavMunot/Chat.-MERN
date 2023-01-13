@@ -54,7 +54,8 @@ const userSchema = new mongoose.Schema({
     friendList: [{ type: mongoose.Types.ObjectId, ref: 'User' }],
     recievedRequests: [{ type: mongoose.Types.ObjectId, ref: 'User', required: true }],
     sentRequests: [{ type: mongoose.Types.ObjectId, ref: 'User', required: true }],
-    inGroups: [{ type: mongoose.Types.ObjectId, ref: 'Group' }]
+    inGroups: [{ type: mongoose.Types.ObjectId, ref: 'Group' }],
+    notifications: [{ type: String }]
 
 })
 

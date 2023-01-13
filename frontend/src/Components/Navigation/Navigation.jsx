@@ -1,10 +1,11 @@
-import { Button } from "@mui/material";
+import { Badge, Button, IconButton } from "@mui/material";
 import React, { useContext } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import LoginContext from "../../State/loginContext/LoginContext";
 import "./navigation.css";
 import Setting from "../Pages/Settings/Setting";
+import { IoIosNotifications } from 'react-icons/io'
 
 function Navigation() {
   const [isSetting, setSettingToggle] = useState(false);
@@ -13,29 +14,42 @@ function Navigation() {
   return (
     <div>
       <nav className="navigation">
-        <span className="logo">
+        <div className="logo">
           <h2>Chat.</h2>
-        </span>
-        <span>
+        </div>
+        <div className="navigation_list">
           {auth.isAuthenticated ? (
-            <img
-              className="userImage"
-              onClick={() => {
-                setSettingToggle(!isSetting);
-              }}
-              src={
-                auth.user.user.profilePhoto
-                  ? auth.user.user.profilePhoto.secure_url
-                  : ""
-              }
-              alt="User Image"
-            />
+            <>
+              <span style={{ paddingRight: '8px' }}>
+                <IconButton>
+                  <Badge badgeContent={0} color={'primary'} showZero>
+                    <IoIosNotifications />
+                  </Badge>
+                </IconButton>
+              </span>
+              <span>
+                <IconButton onClick={() => {
+                  setSettingToggle(!isSetting);
+                }}>
+                  <img
+                    className="userImage"
+
+                    src={
+                      auth.user.user.profilePhoto
+                        ? auth.user.user.profilePhoto.secure_url
+                        : ""
+                    }
+                    alt="User Image"
+                  />
+                </IconButton>
+              </span>
+            </>
           ) : (
             <Link to="/auth">
               <Button variant="outlined">Login</Button>
             </Link>
           )}
-        </span>
+        </div>
         {auth.isAuthenticated && isSetting ? (
           <span className="settingBar">
             <Setting />
