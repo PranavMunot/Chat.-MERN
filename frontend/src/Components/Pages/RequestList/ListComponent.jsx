@@ -25,10 +25,14 @@ const ListComponent = ({ listType }) => {
 
     const [requestListData, setRequestListData] = useState({ isLoading: true, sent: [], recieved: [] })
 
-    useEffect(() => {
-        axios.get(`http://localhost:4000/api/v1/getRequests`)
+    const getUserData = async () => {
+        await axios.get(`http://localhost:4000/api/v1/getRequests`)
             .then(res => { setRequestListData({ isLoading: false, sent: res.data.sent, recieved: res.data.recieved }) })
             .catch(err => { console.log(`Error in getting GET REQUESST API: ${err}`) })
+    }
+
+    useEffect(() => {
+        getUserData()
     }, [])
 
     const handleSelection = async (chatCode, acceptStatus) => {
@@ -36,7 +40,13 @@ const ListComponent = ({ listType }) => {
             chatCode,
             acceptStatus
         })
-            .then(({ data }) => { console.log(data) })
+            .then(({ data }) => {
+                setRequestListData(prevState => ({
+                    ...prevState, isLoading: true
+                }))
+                getUserData()
+                console.log(data)
+            })
             .catch(err => { console.log(err) })
     }
 
