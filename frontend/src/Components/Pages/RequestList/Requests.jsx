@@ -1,11 +1,11 @@
 import {
   Typography,
   Box,
-  IconButton,
   Button,
   Divider,
   TextField,
-  ButtonGroup,
+  ToggleButtonGroup,
+  ToggleButton
 } from "@mui/material";
 
 import React, { useState } from "react";
@@ -30,6 +30,10 @@ function Requests() {
       ? setChatCodeValidity(true)
       : setChatCodeValidity(false);
   };
+
+  const handleListStatus = (e, newValue) => {
+    setRequestListStatus(newValue)
+  }
 
   const sendRequest = async () => {
     await axios.post('http://localhost:4000/api/v1/sendRequest', { chatCode }).then(
@@ -119,27 +123,31 @@ function Requests() {
       <Divider sx={{ mb: 1 }} />
 
       <div>
-        <ButtonGroup size="small" fullWidth sx={{ pb: 1 }}>
-          <Button onClick={() => { setRequestListStatus("sent") }} >
+        <ToggleButtonGroup
+          color={"primary"}
+          value={requestListStatus}
+          exclusive
+          onChange={handleListStatus}
+          size="small"
+          fullWidth
+          sx={{ pb: 1 }}>
+          <ToggleButton value={'sent'}  >
             <Typography
-              color={"primary"}
               variant="h4"
               sx={{ fontSize: "12px" }}
-
             >
               Sent
             </Typography>
-          </Button>
-          <Button onClick={() => { setRequestListStatus("recieved") }}>
+          </ToggleButton >
+          <ToggleButton value={"recieved"}>
             <Typography
-              color={"primary"}
               variant="h4"
               sx={{ fontSize: "12px" }}
             >
               Recieved
             </Typography>
-          </Button>
-        </ButtonGroup>
+          </ToggleButton >
+        </ToggleButtonGroup>
       </div>
       <div>
         <ListComponent listType={requestListStatus} />

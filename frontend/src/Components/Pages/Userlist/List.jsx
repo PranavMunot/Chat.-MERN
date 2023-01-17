@@ -10,6 +10,7 @@ import image from "../../../TestImages/cld-sample-2.jpg";
 import "./UserList.css";
 import LoginContext from "../../../State/loginContext/LoginContext";
 import axios from "axios";
+import socket from "../../../Sockets/SocketInit";
 
 const ListItem = ({ friendName, friendChatCode, friendProfilePhoto }) => {
   return (
@@ -71,7 +72,15 @@ function List() {
         ({ data }) => { setUserFriendList({ isLoading: false, data: data.data }) }
       ).catch(err => { console.log(err) })
     })()
-  }, [auth])
+  }, [])
+
+  useEffect(() => {
+    socket.on('get_user_after_accept', (payload) => {
+      console.log(payload)
+      setUserFriendList({ ...userFriendList, data: [...userFriendList.data, payload.user] })
+    })
+
+  })
 
   return (
     <div className="list">

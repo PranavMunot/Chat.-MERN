@@ -3,6 +3,8 @@ import { Box, IconButton, TextField } from "@mui/material";
 import { IoSend } from "react-icons/io5";
 import dummyMessages from "../../../DummyData/dummyMessages";
 import { FiPaperclip } from "react-icons/fi";
+import { Socket } from "socket.io-client";
+import socket from "../../../Sockets/SocketInit";
 const emojis = require("emojis-list");
 
 const inputReducerFunction = (state, action) => {
@@ -99,8 +101,12 @@ const MessageForm = () => {
             disableUnderline: true,
           }}
           value={state}
+          onKeyDown={
+            () => { socket.emit('typing') }
+          }
           onChange={(e) => {
             dispatch({ type: "changeMessage", payload: e.target.value });
+
           }}
         />
         <IconButton size="medium">

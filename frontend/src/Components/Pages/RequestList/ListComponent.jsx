@@ -7,6 +7,7 @@ import {
     IconButton,
 } from "@mui/material";
 import { TbX, TbCheck } from "react-icons/tb";
+import socket from "../../../Sockets/SocketInit";
 
 const NoListItem = () => {
     return (
@@ -36,6 +37,7 @@ const ListComponent = ({ listType }) => {
     }, [])
 
     const handleSelection = async (chatCode, acceptStatus) => {
+        socket.emit('get_request', { msg: 'sent' })
         await axios.post(`http://localhost:4000/api/v1/acceptRequest`, {
             chatCode,
             acceptStatus

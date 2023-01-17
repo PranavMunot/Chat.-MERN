@@ -4,6 +4,7 @@ const cloudinary = require('cloudinary').v2
 const getCookieToken = require('../Utils/Cookies')
 const errorMessage = require('../Utils/errorMessage')
 
+
 exports.login = async (req, res, next) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email }).select('+password')
@@ -200,6 +201,13 @@ exports.acceptRequest = async (req, res, next) => {
 
         const [sent, recieved] = await Promise.all([user.save(), recieverUser.save()])
 
+
+        if (sent && recieved) {
+            req.app.get('socket').on('get_request', (socket) => {
+                socket.to(socket.id).emit('get_user_after_accept', { user: recieverUser })
+            })
+        }
+
     } else {
 
         await User.updateOne({ _id: user.id }, { $pullAll: { recievedRequests: [recieverUser._id] } })
@@ -208,6 +216,16 @@ exports.acceptRequest = async (req, res, next) => {
         const [sent, recieved] = await Promise.all([user.save(), recieverUser.save()])
 
 
+        if (sent && recieved) {
+            req.app.get('socket').on('get_request', (socket) => {
+                socket.to(socket.id).emit('get_user_after_accept', { user: recieverUser })
+            })
+        }
+
+        // if (sent && recieved) {
+        //     req.app.get('socket').emiter('add_new_user', { user: recieverUser })
+        // }
+
     }
 
 
@@ -215,5 +233,7 @@ exports.acceptRequest = async (req, res, next) => {
         success: true,
         message: `You ${acceptStatus ? 'accepted' : 'rejected'} ${recieverUser.chatCode}'s request`
     })
+
+
 }
 

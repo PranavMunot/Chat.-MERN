@@ -1,12 +1,21 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import Chat from "../Chat/Chat";
 import UserList from "../Userlist/UserList";
 import Navigation from "../../Navigation/Navigation";
 import { Grid } from "@mui/material";
 import ChatDetails from "../ChatDetails/ChatDetails";
 import "./ChatWindow.css";
+import LoginContext from '../../../State/loginContext/LoginContext'
+import socket from "../../../Sockets/SocketInit";
 
 function ChatWindow() {
+
+  const auth = useContext(LoginContext)
+
+  useEffect(() => {
+    socket.emit('online-user', { userId: auth.user.user.chatCode })
+  }, [])
+
   return (
     <>
       <Navigation />
