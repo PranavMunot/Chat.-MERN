@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from 'axios'
+import LoginContext from '../../../State/loginContext/LoginContext'
 import "./Requests.css";
 import {
     Typography,
@@ -24,6 +25,8 @@ const NoListItem = () => {
 
 const ListComponent = ({ listType }) => {
 
+    const auth = useContext(LoginContext)
+
     const [requestListData, setRequestListData] = useState({ isLoading: true, sent: [], recieved: [] })
 
     const getUserData = async () => {
@@ -37,7 +40,7 @@ const ListComponent = ({ listType }) => {
     }, [])
 
     const handleSelection = async (chatCode, acceptStatus) => {
-        socket.emit('get_request', { msg: 'sent' })
+        socket.emit('recieve-user-add-request', { RecieverChatCode: auth.user.user.chatCode, SenderChatCode: chatCode })
         await axios.post(`http://localhost:4000/api/v1/acceptRequest`, {
             chatCode,
             acceptStatus
@@ -47,7 +50,6 @@ const ListComponent = ({ listType }) => {
                     ...prevState, isLoading: true
                 }))
                 getUserData()
-                console.log(data)
             })
             .catch(err => { console.log(err) })
     }

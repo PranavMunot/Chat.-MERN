@@ -203,9 +203,9 @@ exports.acceptRequest = async (req, res, next) => {
 
 
         if (sent && recieved) {
-            req.app.get('socket').on('get_request', (socket) => {
-                socket.to(socket.id).emit('get_user_after_accept', { user: recieverUser })
-            })
+            req.app.get('socket').emitToSenderRequest('get_user_after_accept', { user: recieverUser })
+            req.app.get('socket').emitToRecieverRequest('get_user_after_accept', { user })
+            // socket.to(effectedUser).emit('get_user_after_accept', { user: recieverUser })
         }
 
     } else {
@@ -213,20 +213,11 @@ exports.acceptRequest = async (req, res, next) => {
         await User.updateOne({ _id: user.id }, { $pullAll: { recievedRequests: [recieverUser._id] } })
         await User.updateOne({ _id: recieverUser.id }, { $pullAll: { sentRequests: [user._id] } })
 
-        const [sent, recieved] = await Promise.all([user.save(), recieverUser.save()])
+        await Promise.all([user.save(), recieverUser.save()])
 
-
-        if (sent && recieved) {
-            req.app.get('socket').on('get_request', (socket) => {
-                socket.to(socket.id).emit('get_user_after_accept', { user: recieverUser })
-            })
-        }
-
-        // if (sent && recieved) {
-        //     req.app.get('socket').emiter('add_new_user', { user: recieverUser })
-        // }
 
     }
+
 
 
     res.status(200).json({
