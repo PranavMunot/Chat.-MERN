@@ -26,6 +26,7 @@ const ListItem = ({ friendName, friendChatCode, friendProfilePhoto }) => {
       >
         <CardActionArea
           sx={{ display: "flex", justifyContent: "left", p: 1.5 }}
+
         >
           <CardMedia>
             <img src={friendProfilePhoto ? friendProfilePhoto.secure_url : image} className="listUserImage" alt="userImage" />

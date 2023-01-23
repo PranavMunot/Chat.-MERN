@@ -14,7 +14,7 @@ import socket from './Sockets/SocketInit'
 function App() {
   const [user, setUser] = useState({})
   const [isLoggedIn, setLogIn] = useState(false)
-
+  const [isDuplicate, setIsDuplicate] = useState(false)
 
   const login = () => {
     setLogIn(true)
@@ -22,8 +22,14 @@ function App() {
   }
   const logout = async () => {
     await axios.get('http://localhost:4000/api/v1/logout').then((data) => { console.log(data.data); Cookies.remove('token'); setLogIn(false); setUser(null) }).catch((error => { console.log(error.response.status, error.response.data); }))
-
   }
+
+  useEffect(() => {
+    socket.on('duplicate-tab', () => {
+      console.log('this is duplicate tab')
+      setIsDuplicate(true)
+    })
+  })
 
   useEffect(() => {
     const userToken = Cookies.get('token')
@@ -43,16 +49,14 @@ function App() {
   return (
     <>
       <ThemeProvider theme={lightTheme}>
-        {/* <ThemeProvider theme={TypographyTheme}> */}
         <Container className="App">
           <Router>
             <LoginContext.Provider value={{ isAuthenticated: isLoggedIn, user, setUser, login: login, logout: logout }}>
-              <AppController />
+              {!isDuplicate ? <AppController /> : <h1>Duplicate Tab close this</h1>}
             </LoginContext.Provider>
           </Router>
         </Container>
       </ThemeProvider>
-      {/* </ThemeProvider> */}
     </>
   );
 }

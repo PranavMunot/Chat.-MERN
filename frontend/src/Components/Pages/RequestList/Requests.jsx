@@ -4,8 +4,8 @@ import {
   Button,
   Divider,
   TextField,
-  ToggleButtonGroup,
-  ToggleButton
+  Tabs,
+  Tab
 } from "@mui/material";
 
 import React, { useState } from "react";
@@ -19,7 +19,7 @@ function Requests() {
   const [chatCode, setChatCode] = useState("");
   const [openChatCodeSection, setChatCodeSection] = useState(false);
   const [isChatCodeValid, setChatCodeValidity] = useState(false);
-  const [requestListStatus, setRequestListStatus] = useState("sent");
+  const [requestListStatus, setRequestListStatus] = useState('sent');
   const [helperMessage, setHelperMessage] = useState({ isShowing: false, message: '' })
 
 
@@ -123,31 +123,32 @@ function Requests() {
       <Divider sx={{ mb: 1 }} />
 
       <div>
-        <ToggleButtonGroup
+        <Tabs
           color={"primary"}
           value={requestListStatus}
-          exclusive
+          variant='fullWidth'
           onChange={handleListStatus}
           size="small"
           fullWidth
           sx={{ pb: 1 }}>
-          <ToggleButton value={'sent'}  >
-            <Typography
-              variant="h4"
-              sx={{ fontSize: "12px" }}
-            >
-              Sent
-            </Typography>
-          </ToggleButton >
-          <ToggleButton value={"recieved"}>
+          <Tab value={'sent'} label={<Typography
+            variant="h4"
+            color={'primary'}
+            sx={{ fontSize: "12px" }}
+          >
+            Sent
+          </Typography>} />
+          <Tab value={"recieved"} label={
             <Typography
               variant="h4"
               sx={{ fontSize: "12px" }}
             >
               Recieved
             </Typography>
-          </ToggleButton >
-        </ToggleButtonGroup>
+          } />
+
+
+        </Tabs>
       </div>
       <div>
         <ListComponent listType={requestListStatus} />

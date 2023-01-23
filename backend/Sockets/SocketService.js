@@ -16,21 +16,24 @@ class SocketService {
 
         this.io.on('connection', (socket) => {
             this.#innerSocket = socket
-            // global.socket = socket
             socket.on('online-user', ({ userId }) => {
+                if (onlineUsers.get(userId)) {
+                    socket.to(onlineUsers.get(userId)).emit('duplicate-tab')
+                }
                 onlineUsers.set(userId, socket.id)
                 console.log(onlineUsers)
             })
 
             socket.on('recieve-user-add-request', ({ RecieverChatCode, SenderChatCode }) => {
+
                 this.requestRecieverUser = onlineUsers.get(RecieverChatCode)
                 this.requestSenderUser = onlineUsers.get(SenderChatCode)
             })
 
             socket.on('disconnect', (reason) => {
                 console.log(`disConnected ${socket.id}`)
+                console.log(onlineUsers)
                 onlineUsers.delete(socket.id)
-                console.log(reason)
             })
         })
 
