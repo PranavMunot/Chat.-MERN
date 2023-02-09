@@ -48,7 +48,7 @@ function Setting() {
         disableElevation
         variant="outlined"
         fullWidth
-        sx={{ mb: 2 }}
+        sx={{ mb: 2, bgcolor: 'rgba(235, 244, 245,1)', }}
         aria-label="Disabled elevation buttons"
       >
         <Button>
@@ -62,7 +62,9 @@ function Setting() {
           </Typography>
         </Button>
       </ButtonGroup>
+
       <Divider />
+
       <Requests />
     </div>
   );

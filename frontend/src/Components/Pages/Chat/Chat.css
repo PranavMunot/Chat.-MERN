@@ -1,60 +1,79 @@
-.chatGrid{
+.chatGrid {
     display: grid;
     height: 90vh;
     grid-template-rows: auto 1fr auto;
-    border-left:1px solid rgba(235, 244, 245, 0.4); 
-    border-right:1px solid rgba(235, 244, 245, 0.4); 
-    background-color:  rgba(235, 244, 245, 0.4); 
+    border-left: 1px solid rgba(235, 244, 245, 0.4);
+    border-right: 1px solid rgba(235, 244, 245, 0.4);
+    background-color: rgba(235, 244, 245, 0.4);
 }
-.chatInfo{
+
+.chatInfo {
     padding: 0.7rem;
     display: flex;
     align-items: center;
-    border-bottom:1px solid rgba(235, 244, 245, 0.4);
+    border-bottom: 1px solid rgba(235, 244, 245, 0.4);
 }
-.chatInfoImage{
+
+.chatInfoImage {
     width: 2.5rem;
     border-radius: 7px;
     height: 2.5rem;
     margin-right: 1rem;
 }
-.chatInfoText{
+
+.chatInfoText {
     display: flex;
     flex-direction: column;
 }
 
-
-.icon{
-    color:#103783;
+.icon {
+    color: #103783;
 }
 
-.messageForm{
+.messageForm {
     margin: 0.7rem;
     display: flex;
-    justify-content: center;
+    /* align-items: flex-start; */
+    justify-content: flex-start;
     border-radius: 7px;
     background-color: rgba(235, 244, 245, 0.8);
     border: 1px solid rgba(235, 244, 245, 0.4);
 }
-.emojiSection{
+
+.emojiSection {
     width: 100%;
     height: 200px;
     overflow: hidden auto;
     display: inline-flex;
-   flex-wrap: wrap;
-   padding: 1rem;
+    flex-wrap: wrap;
+    padding: 1rem;
 
 }
-.emoji{
-    font-size: 18px;
+
+.emoji {
+    font-size: 1.3rem;
     width: 40px;
     height: 40px;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    
+
 }
-.emoji:hover{
+
+.emoji:hover {
     background-color: #103783;
+}
+
+.null_chat_text {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.chat_screen{
+    grid-template-rows: auto 1fr auto;
+}
+.null_chat_screen{
+    grid-template-rows: 1fr;
 }

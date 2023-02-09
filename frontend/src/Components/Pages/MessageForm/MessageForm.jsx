@@ -1,9 +1,8 @@
-import React, { useState, useReducer, useMemo, useRef } from "react";
+import React, { useState, useReducer, useMemo } from "react";
 import { Box, IconButton, TextField } from "@mui/material";
 import { IoSend } from "react-icons/io5";
 import dummyMessages from "../../../DummyData/dummyMessages";
 import { FiPaperclip } from "react-icons/fi";
-import { Socket } from "socket.io-client";
 import socket from "../../../Sockets/SocketInit";
 const emojis = require("emojis-list");
 
@@ -74,13 +73,14 @@ const MessageForm = () => {
     <div>
       {emojiSection ? EmojiMemo : null}
       <div className="messageForm">
-        <IconButton
-          onClick={() => {
-            setEmojiSection(!emojiSection);
-          }}
-        >
-          {emojiSection ? "😀" : "😐"}
-        </IconButton>
+        <span style={{ display: 'flex', alignItems: 'center' }}>
+          <IconButton
+            onClick={() => {
+              setEmojiSection(!emojiSection);
+            }}
+          >
+            {emojiSection ? "😀" : "😐"}
+          </IconButton></span>
         <TextField
           placeholder="Type your message here!"
           variant="standard"
@@ -109,12 +109,16 @@ const MessageForm = () => {
 
           }}
         />
-        <IconButton size="medium">
-          <FiPaperclip className="icon" />
-        </IconButton>
-        <IconButton onClick={sendMessage} size="medium" sx={{ ml: 1 }}>
-          <IoSend className="icon" />
-        </IconButton>
+        <span style={{ display: 'flex', alignItems: 'center' }}>
+          <IconButton size="medium">
+            <FiPaperclip className="icon" />
+          </IconButton>
+        </span>
+        <span style={{ display: 'flex', alignItems: 'center' }}>
+          <IconButton onClick={sendMessage} size="medium" sx={{ ml: 1 }}>
+            <IoSend className="icon" />
+          </IconButton>
+        </span>
       </div>
     </div>
   );

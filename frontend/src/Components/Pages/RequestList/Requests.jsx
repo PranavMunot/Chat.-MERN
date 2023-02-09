@@ -75,11 +75,12 @@ function Requests() {
             onClick={() => {
               setChatCodeSection(!openChatCodeSection);
             }}
+            style={{ backgroundColor: 'rgba(235, 244, 245,1)' }}
           >
             <Typography
               color={"primary"}
               variant="h1"
-              sx={{ fontSize: "12px", display: "flex", alignItems: "center" }}
+              sx={{ fontSize: "12px", display: "flex", bgcolor: 'rgba(235, 244, 245,1)', alignItems: "center" }}
             >
               <AiOutlineUserAdd />
               New
@@ -130,11 +131,11 @@ function Requests() {
           onChange={handleListStatus}
           size="small"
           fullWidth
-          sx={{ pb: 1 }}>
+          sx={{ mb: 1, bgcolor: 'rgba(235, 244, 245,1)', borderRadius: 1 }}>
           <Tab value={'sent'} label={<Typography
             variant="h4"
             color={'primary'}
-            sx={{ fontSize: "12px" }}
+            sx={{ fontSize: "0.8rem" }}
           >
             Sent
           </Typography>} />

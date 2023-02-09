@@ -15,7 +15,7 @@ const dummyMessages = [
         from: 'abc',
         to: 'def',
         isSelf: true,
-        text: "Hello!"
+        text: "Hello!🏃🏽🏃🏾‍♀️🏃🏾‍♂️🏃🏾🏃🏿‍♀️🏃🏿‍♂️🏃🏿"
     },
     {
         from: 'abc',

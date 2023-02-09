@@ -3,16 +3,22 @@ import {
   CardActionArea,
   CardContent,
   CardMedia,
+  Skeleton,
   Typography,
 } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import image from "../../../TestImages/cld-sample-2.jpg";
 import "./UserList.css";
-import LoginContext from "../../../State/loginContext/LoginContext";
 import axios from "axios";
 import socket from "../../../Sockets/SocketInit";
+import { Box } from "@mui/system";
+import { useDispatch } from 'react-redux'
+import { friendAction } from '../../../State/Redux/FriendReducer'
+import dummyMessages from "../../../DummyData/dummyMessages";
 
-const ListItem = ({ friendName, friendChatCode, friendProfilePhoto }) => {
+const ListItem = ({ friendId, friendName, friendChatCode, friendProfilePhoto, friendAccountCreatedAt }) => {
+
+  const dispatch = useDispatch()
   return (
     <>
       <Card
@@ -26,7 +32,7 @@ const ListItem = ({ friendName, friendChatCode, friendProfilePhoto }) => {
       >
         <CardActionArea
           sx={{ display: "flex", justifyContent: "left", p: 1.5 }}
-
+          onClick={() => { dispatch(friendAction.selectedUser({ friendId, friendName, friendProfilePhoto, messages: dummyMessages, friendAccountCreatedAt })) }}
         >
           <CardMedia>
             <img src={friendProfilePhoto ? friendProfilePhoto.secure_url : image} className="listUserImage" alt="userImage" />
@@ -64,7 +70,6 @@ const ListItem = ({ friendName, friendChatCode, friendProfilePhoto }) => {
 
 function List() {
 
-  const auth = useContext(LoginContext)
   const [userFriendList, setUserFriendList] = useState({ isLoading: true, data: [] })
 
   useEffect(() => {
@@ -77,7 +82,6 @@ function List() {
 
   useEffect(() => {
     socket.on('get_user_after_accept', (payload) => {
-      console.log(payload)
       setUserFriendList({ ...userFriendList, data: [...userFriendList.data, payload.user] })
     })
 
@@ -86,10 +90,28 @@ function List() {
   return (
     <div className="list">
       {!userFriendList.isLoading && userFriendList.data.length > 0 ?
-        userFriendList.data.map((friendData) => (<ListItem key={friendData.chatCode} friendName={friendData.name} friendProfilePhoto={friendData.profilePhoto} friendChatCode={`***${friendData.chatCode.slice(3)}`} />))
+        userFriendList.data.map((friendData) => (
+          <ListItem key={friendData.chatCode}
+            friendId={friendData._id}
+            friendAccountCreatedAt={friendData.createdAt}
+            friendName={friendData.name}
+            friendProfilePhoto={friendData.profilePhoto}
+            friendChatCode={`***${friendData.chatCode.slice(3)}`}
+          />))
         : (
           <>
-            {userFriendList.isLoading ? (<Typography variant='h1'>Loading</Typography>) : (<Typography variant='h1'>No Friends</Typography>)}
+            {userFriendList.isLoading ? (
+              <>
+                <Skeleton variant="rounded" sx={{ mb: 1.5, mr: 1.5, bgcolor: 'rgba(235, 244, 245, 0.4)' }} height={'4rem'} />
+                <Skeleton variant="rounded" sx={{ mb: 1.5, mr: 1.5, bgcolor: 'rgba(235, 244, 245, 0.4)' }} height={'4rem'} />
+                <Skeleton variant="rounded" sx={{ mb: 1.5, mr: 1.5, bgcolor: 'rgba(235, 244, 245, 0.4)' }} height={'4rem'} />
+              </>
+            ) : (
+              <Box sx={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Typography variant="body1" fontSize={'0.8rem'} >😕Hey! seems like no friends here?😕 </Typography>
+              </Box>
+
+            )}
           </>
         )}
     </div>

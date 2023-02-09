@@ -103,7 +103,7 @@ exports.getMultipleUsersById = async (req, res, next) => {
 
     const response = await User.find({
         '_id': { $in: user.friendList }
-    }).select(['name', 'chatCode', 'profilePhoto']).lean()
+    }).select(['_id', 'name', 'chatCode', 'profilePhoto', 'createdAt']).lean()
 
 
     return res.status(200).json({
