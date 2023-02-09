@@ -6,12 +6,18 @@ const messageSchema = mongoose.Schema({
     to: { type: mongoose.Types.ObjectId, ref: 'User', required: [true, `"To" Id is Must`] },
     messageType: {
         type: String,
-        required: [true, `"Message type" is Must`]
+        required: [true, `"Message type" is Must`],
+        enum: ['text', 'image'],
+        default: 'text'
     },
     message: {
         type: String,
         required: [true, `"Message" is Must`]
-    }
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    },
 
 })
 

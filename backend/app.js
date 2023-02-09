@@ -3,6 +3,7 @@ const fileUpload = require('express-fileupload')
 const morgan = require("morgan")
 const cookieParser = require('cookie-parser')
 const userRoute = require('./Routes/UserRoutes')
+const messageRoute = require('./Routes/MessageRoutes')
 const cors = require('cors')
 const cloudinary = require('cloudinary').v2
 const app = express()
@@ -28,5 +29,6 @@ cloudinary.config({
 })
 // Routes
 app.use('/api/v1', userRoute)
+app.use('/api/v1/messages', messageRoute)
 
 module.exports = app
