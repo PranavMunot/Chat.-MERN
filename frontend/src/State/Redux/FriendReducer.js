@@ -16,7 +16,6 @@ const friendSlice = createSlice({
     initialState: initialFriendState,
     reducers: {
         selectedUser(state, action) {
-            console.log(action)
             state.isFriendSelected = true
             state.friendId = action.payload.friendId
             state.friendName = action.payload.friendName

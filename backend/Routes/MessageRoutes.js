@@ -7,7 +7,7 @@ const { isLoggedIn } = require('../Middleware/userMiddlewares')
 const { sendMessage, getMessages } = require('../Controllers/MessageController')
 
 router.route('/sendMessage').post(isLoggedIn, sendMessage)
-router.route('/getMessages').get(isLoggedIn, getMessages)
+router.route('/getMessages').post(isLoggedIn, getMessages)
 
 
 module.exports = router

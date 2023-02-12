@@ -19,6 +19,20 @@ import dummyMessages from "../../../DummyData/dummyMessages";
 const ListItem = ({ friendId, friendName, friendChatCode, friendProfilePhoto, friendAccountCreatedAt }) => {
 
   const dispatch = useDispatch()
+
+  const handelFriendSelection = async () => {
+    await axios.post('http://localhost:4000/api/v1/messages/getMessages', { to: friendId })
+      .then(({ data }) => dispatch(
+        friendAction.selectedUser(
+          { friendId, friendName, friendProfilePhoto, messages: data.foundMessages, friendAccountCreatedAt }
+        )
+      ))
+      .catch(error => console.log(error))
+
+
+  }
+
+
   return (
     <>
       <Card
@@ -32,7 +46,7 @@ const ListItem = ({ friendId, friendName, friendChatCode, friendProfilePhoto, fr
       >
         <CardActionArea
           sx={{ display: "flex", justifyContent: "left", p: 1.5 }}
-          onClick={() => { dispatch(friendAction.selectedUser({ friendId, friendName, friendProfilePhoto, messages: dummyMessages, friendAccountCreatedAt })) }}
+          onClick={() => { handelFriendSelection() }}
         >
           <CardMedia>
             <img src={friendProfilePhoto ? friendProfilePhoto.secure_url : image} className="listUserImage" alt="userImage" />
