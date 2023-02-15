@@ -4,6 +4,7 @@ const initialFriendState = {
     isFriendSelected: false,
     friendId: '',
     friendName: '',
+    friendChatCode: '',
     friendProfilePhoto: '',
     friendAccountCreatedAt: '',
     friendMessages: [],
@@ -20,8 +21,13 @@ const friendSlice = createSlice({
             state.friendId = action.payload.friendId
             state.friendName = action.payload.friendName
             state.friendProfilePhoto = action.payload.friendProfilePhoto
+            state.friendChatCode = action.payload.friendChatCode
             state.friendMessages = action.payload.messages
             state.friendAccountCreatedAt = action.payload.friendAccountCreatedAt
+        },
+        addMessageToRedux(state, action) {
+            state.friendMessages = [...state.friendMessages, action.payload.message]
+
         }
     }
 })

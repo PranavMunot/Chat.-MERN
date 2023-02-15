@@ -25,9 +25,13 @@ class SocketService {
             })
 
             socket.on('recieve-user-add-request', ({ RecieverChatCode, SenderChatCode }) => {
-
                 this.requestRecieverUser = onlineUsers.get(RecieverChatCode)
                 this.requestSenderUser = onlineUsers.get(SenderChatCode)
+            })
+
+            socket.on('send-message-to-friend', ({ friendChatCode, message }) => {
+                let sendingMessageToUser = onlineUsers.get(friendChatCode)
+                this.io.to(sendingMessageToUser).emit('recieved-message', message)
             })
 
             socket.on('disconnect', (reason) => {
@@ -51,6 +55,8 @@ class SocketService {
             this.io.to(this.requestSenderUser).emit(event, body)
         }
     }
+
+
 }
 
 module.exports = SocketService

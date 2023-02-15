@@ -6,7 +6,7 @@ import {
   Skeleton,
   Typography,
 } from "@mui/material";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import image from "../../../TestImages/cld-sample-2.jpg";
 import "./UserList.css";
 import axios from "axios";
@@ -14,7 +14,6 @@ import socket from "../../../Sockets/SocketInit";
 import { Box } from "@mui/system";
 import { useDispatch } from 'react-redux'
 import { friendAction } from '../../../State/Redux/FriendReducer'
-import dummyMessages from "../../../DummyData/dummyMessages";
 
 const ListItem = ({ friendId, friendName, friendChatCode, friendProfilePhoto, friendAccountCreatedAt }) => {
 
@@ -24,7 +23,7 @@ const ListItem = ({ friendId, friendName, friendChatCode, friendProfilePhoto, fr
     await axios.post('http://localhost:4000/api/v1/messages/getMessages', { to: friendId })
       .then(({ data }) => dispatch(
         friendAction.selectedUser(
-          { friendId, friendName, friendProfilePhoto, messages: data.foundMessages, friendAccountCreatedAt }
+          { friendId, friendName, friendProfilePhoto, friendChatCode, messages: data.foundMessages, friendAccountCreatedAt }
         )
       ))
       .catch(error => console.log(error))
@@ -73,7 +72,7 @@ const ListItem = ({ friendId, friendName, friendChatCode, friendProfilePhoto, fr
               variant="caption"
               color={"text.secondary"}
             >
-              {friendChatCode}
+              ***{friendChatCode.slice(3, 6)}
             </Typography>
           </CardContent>
         </CardActionArea>
@@ -110,7 +109,7 @@ function List() {
             friendAccountCreatedAt={friendData.createdAt}
             friendName={friendData.name}
             friendProfilePhoto={friendData.profilePhoto}
-            friendChatCode={`***${friendData.chatCode.slice(3)}`}
+            friendChatCode={friendData.chatCode}
           />))
         : (
           <>

@@ -3,13 +3,23 @@ import { Box } from "@mui/system";
 import React, { useRef, useEffect, useContext } from "react";
 import "./MessageScreen.css";
 import LoginContext from '../../../State/loginContext/LoginContext'
+import socket from "../../../Sockets/SocketInit";
+import { useDispatch } from "react-redux";
+import { friendAction } from "../../../State/Redux/FriendReducer";
 
 
 function MessageScreen({ messages }) {
   const messagesColumnRef = useRef(null);
   const auth = useContext(LoginContext)
+  const dispatch = useDispatch()
 
-  console.log(messages)
+  useEffect(() => {
+    socket.on('recieved-message', (message) => {
+      console.log('useEffectRan')
+      dispatch(friendAction.addMessageToRedux({ message }))
+    })
+  }, [])
+
   useEffect(() => {
     messagesColumnRef.current.scrollTop =
       messagesColumnRef.current.scrollHeight;

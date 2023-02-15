@@ -1,10 +1,13 @@
 import React, { useState, useReducer, useMemo } from "react";
 import { Box, IconButton, TextField } from "@mui/material";
 import { IoSend } from "react-icons/io5";
-import dummyMessages from "../../../DummyData/dummyMessages";
 import { FiPaperclip } from "react-icons/fi";
 import socket from "../../../Sockets/SocketInit";
+import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
+import { friendAction } from "../../../State/Redux/FriendReducer";
 const emojis = require("emojis-list");
+
 
 const inputReducerFunction = (state, action) => {
   switch (action.type) {
@@ -47,21 +50,25 @@ const EmojiList = ({ clickHandler }) => {
 
 const MessageForm = () => {
   const [emojiSection, setEmojiSection] = useState(false);
-  const [state, dispatch] = useReducer(inputReducerFunction, "");
+  const [state, reducerDispatch] = useReducer(inputReducerFunction, "");
 
-  const sendMessage = () => {
-    dummyMessages.push({
-      from: "abc",
-      to: "def",
-      isSelf: true,
-      text: state,
-    });
-    console.log(state, dummyMessages);
-    dispatch({ type: "reset" });
+
+  const friend = useSelector(state => state.friend)
+  const reduxDispatch = useDispatch()
+
+  const sendMessage = async () => {
+    await axios.post('http://localhost:4000/api/v1/messages/sendMessage', { to: friend.friendId, message: state })
+      .then(({ data }) => {
+        console.log(data.newMessage)
+        reduxDispatch(friendAction.addMessageToRedux({ message: data.newMessage }))
+        socket.emit('send-message-to-friend', { friendChatCode: friend.friendChatCode, message: data.newMessage })
+      })
+      .catch(err => console.log(err))
+    reducerDispatch({ type: "reset" });
   };
 
   const addEmoji = (emoji) => {
-    dispatch({ type: "addEmoji", payload: emoji });
+    reducerDispatch({ type: "addEmoji", payload: emoji });
   };
 
   const EmojiMemo = useMemo(
@@ -105,8 +112,7 @@ const MessageForm = () => {
             () => { socket.emit('typing') }
           }
           onChange={(e) => {
-            dispatch({ type: "changeMessage", payload: e.target.value });
-
+            reducerDispatch({ type: "changeMessage", payload: e.target.value });
           }}
         />
         <span style={{ display: 'flex', alignItems: 'center' }}>
