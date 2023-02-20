@@ -20,8 +20,8 @@ function ChatWindow() {
 
   return (
     <>
-      <Navigation />
       <Provider store={store}>
+        <Navigation />
         <Grid container className="gridWindow">
           <Grid sx={{ height: "100%" }} item md={3}>
             <UserList />

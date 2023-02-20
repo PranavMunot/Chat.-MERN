@@ -55,7 +55,7 @@ function Authenticate() {
       } else {
         setPassword(e.target.value);
       }
-      checkValidity();
+      // checkValidity();
     };
 
     return (

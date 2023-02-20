@@ -3,16 +3,18 @@ import "./Setting.css";
 import LoginContext from "../../../State/loginContext/LoginContext";
 import { useContext } from "react";
 import { Box, Divider, ButtonGroup, Button, Typography } from "@mui/material";
-
 import { format } from "date-fns";
 import Requests from "../RequestList/Requests";
+import { useDispatch } from "react-redux";
+import { friendAction } from "../../../State/Redux/FriendReducer";
 
 function Setting() {
   const auth = useContext(LoginContext);
-
+  const dispatch = useDispatch()
 
   const logoutHandler = () => {
     auth.logout();
+    dispatch(friendAction.clearAllData())
   };
 
   return (
@@ -44,25 +46,26 @@ function Setting() {
           {format(new Date(auth.user.user.createdAt), "dd/MM/yyyy")}
         </Typography>
       </div>
-      <ButtonGroup
-        disableElevation
-        variant="outlined"
-        fullWidth
-        sx={{ mb: 2, bgcolor: 'rgba(235, 244, 245,1)', }}
-        aria-label="Disabled elevation buttons"
-      >
-        <Button>
-          <Typography variant="button" fontSize={"14px"}>
-            Settings
-          </Typography>
-        </Button>
-        <Button onClick={logoutHandler}>
-          <Typography variant="button" fontSize={"14px"}>
-            Logout
-          </Typography>
-        </Button>
-      </ButtonGroup>
-
+      <Box width={'100%'}>
+        <ButtonGroup
+          disableElevation
+          variant="outlined"
+          fullWidth
+          sx={{ mb: 2, bgcolor: 'rgba(235, 244, 245,1)' }}
+          aria-label="Disabled elevation buttons"
+        >
+          <Button>
+            <Typography variant="button" fontSize={"14px"}>
+              Settings
+            </Typography>
+          </Button>
+          <Button onClick={logoutHandler}>
+            <Typography variant="button" fontSize={"14px"}>
+              Logout
+            </Typography>
+          </Button>
+        </ButtonGroup>
+      </Box>
       <Divider />
 
       <Requests />

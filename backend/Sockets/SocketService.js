@@ -21,6 +21,7 @@ class SocketService {
                     socket.to(onlineUsers.get(userId)).emit('duplicate-tab')
                 }
                 onlineUsers.set(userId, socket.id)
+                console.log(`${socket.id} got added`)
                 console.log(onlineUsers)
             })
 
