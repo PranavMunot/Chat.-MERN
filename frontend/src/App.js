@@ -9,9 +9,7 @@ import lightTheme from './Utils/LightTheme';
 import axios from 'axios'
 import Cookies from 'js-cookie';
 import socket from './Sockets/SocketInit'
-
-
-
+import { Box, CircularProgress } from '@mui/material'
 
 
 function App() {
@@ -20,12 +18,10 @@ function App() {
   const [isUserLoading, setUserLoading] = useState(true);
   const [isDuplicate, setIsDuplicate] = useState(false)
 
-
-
   const login = () => {
     setLogIn(true)
-
   }
+
   const logout = async () => {
     await axios.get('http://localhost:4000/api/v1/logout')
       .then((data) => {
@@ -56,14 +52,13 @@ function App() {
             setUser(data);
             login();
             setUserLoading(false)
-            socket.emit('clientConnect', { message: 'yooo Connection successful', user: data.user })
+            socket.emit('clientConnect', { message: `Connection successful from ${socket.id}`, user: data.user })
           }
-        ).catch(err => { console.log(err) })
+        ).catch(err => { console.log(err); setUserLoading(false) })
     }
     else {
       setUserLoading(false)
     }
-
   }, [])
 
 
@@ -73,7 +68,18 @@ function App() {
         <Container className="App">
           <Router>
             <LoginContext.Provider value={{ isAuthenticated: isLoggedIn, user, setUser, login: login, logout: logout }}>
-              {!isDuplicate ? (<>{isUserLoading ? <h1>Loading</h1> : <AppController />}</>) : <h1>Duplicate Tab close this</h1>}
+              {!isDuplicate ? (
+                <>
+                  {isUserLoading ?
+                    <Box sx={{ display: 'flex', width: '100%', height: '100vh', alignItems: 'center', justifyContent: 'center' }}>
+                      <CircularProgress color='primary' />
+                    </Box>
+                    :
+                    <AppController />}
+                </>
+              )
+                :
+                <h1>Duplicate Tab close this</h1>}
             </LoginContext.Provider>
           </Router>
         </Container>

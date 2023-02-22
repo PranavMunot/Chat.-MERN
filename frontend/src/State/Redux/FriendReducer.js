@@ -7,6 +7,8 @@ const initialFriendState = {
     friendChatCode: '',
     friendProfilePhoto: '',
     friendAccountCreatedAt: '',
+    isMessageLimit: true,
+    messageLimit: 15,
     friendMessages: [],
     sharedImages: [],
     sharedLinks: []
@@ -27,7 +29,9 @@ const friendSlice = createSlice({
         },
         addMessageToRedux(state, action) {
             state.friendMessages = [...state.friendMessages, action.payload.message]
-
+        },
+        addMultipleMessagesToRedux(state, action) {
+            state.friendMessages = [...action.payload.messages]
         },
         clearAllData(state) {
             state = initialFriendState

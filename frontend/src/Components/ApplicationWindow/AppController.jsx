@@ -4,6 +4,8 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import Authenticate from '../UserAuthentication/Authenticate'
 import Home from '../Pages/Home/Home'
 import ChatWindow from '../Pages/ChatWindow/ChatWindow'
+import { Provider } from "react-redux";
+import store from '../../State/Redux/Store'
 
 function AppController() {
 
@@ -14,12 +16,15 @@ function AppController() {
   if (auth.isAuthenticated) {
     return (
       <>
-        <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='/chat/:id' element={<ChatWindow />} />
-          <Route path='*' element={<Navigate to={'/'} />} />
-        </Routes>
+        <Provider store={store}>
+          <Routes>
+            <Route path='/' element={<Home />} />
+            <Route path='/chat/:id' element={<ChatWindow />} />
+            <Route path='*' element={<Navigate to={'/'} />} />
+          </Routes>
+        </Provider>
       </>
+
     )
   }
   return (

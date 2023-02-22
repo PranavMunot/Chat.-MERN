@@ -11,6 +11,10 @@ const lightTheme = createTheme({
         },
         text: {
             primary: '#103783'
+        },
+        action: {
+            disabledBackground: '#eeeeee',
+            disabled: '#999999'
         }
     },
     typography: {

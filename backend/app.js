@@ -9,11 +9,12 @@ const cloudinary = require('cloudinary').v2
 const app = express()
 
 // express middlewares
-app.use(express.json())
+app.use(express.json({}))
 app.use(express.urlencoded({ extended: true }))
 app.use(fileUpload({
     useTempFiles: true,
-    tempFileDir: '/tmp/'
+    tempFileDir: '/tmp/',
+    limits: { fileSize: 50 * 1024 * 1024 },
 }))
 // all third-party middlewares
 app.use(cors())

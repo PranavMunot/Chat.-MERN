@@ -7,6 +7,7 @@ const errorMessage = require('../Utils/errorMessage')
 
 exports.login = async (req, res, next) => {
     const { email, password } = req.body;
+    console.log(email, password)
     const user = await User.findOne({ email }).select('+password')
     if (!user) {
         return errorMessage(res, 400, 'User Not Found!')
@@ -35,9 +36,18 @@ exports.signup = async (req, res, next) => {
     // Take Required and Optional Inputs
     const { name, email, password } = req.body;
 
-    const file = req.files.profilePhoto
+    const file = req.files && req.files.profilePhoto
+
+    console.log(name, email, password, file)
 
     let profileImage;
+
+    if (!name || !email || !password) {
+        return res.status(400).json({
+            success: false,
+            errorMsg: 'Please enter proper name, Email, Password'
+        })
+    }
 
     if (file) {
         profileImage = await cloudinary.uploader.upload(file.tempFilePath, {
@@ -47,17 +57,15 @@ exports.signup = async (req, res, next) => {
             crop: 'scale'
         })
     } else {
-        profileImage = undefined
+        profileImage = {
+            "public_id": "Chat Users/pnewk3qaomps5cpwqp2h",
+            "secure_url": "https://res.cloudinary.com/cloudinaryapplication/image/upload/v1677056444/Chat%20Users/pnewk3qaomps5cpwqp2h.png"
+        }
     }
 
     req.body.profilePhoto = { id: profileImage.public_id, secure_url: profileImage.secure_url }
 
-    if (!name || !email || !password) {
-        return res.status(400).json({
-            success: false,
-            errorMsg: 'Please enter proper name, Email, Password'
-        })
-    }
+
 
     // create unique 6-digit alpha-numeric code
     req.body.chatCode = Math.random().toString(36).slice(2, 8);

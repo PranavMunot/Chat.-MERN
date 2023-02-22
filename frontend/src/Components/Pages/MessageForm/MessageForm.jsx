@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useCallback } from "react";
+import React, { useState, useReducer, useMemo } from "react";
 import { Box, IconButton, TextField } from "@mui/material";
 import { IoSend } from "react-icons/io5";
 import { FiPaperclip } from "react-icons/fi";
@@ -71,7 +71,7 @@ const MessageForm = () => {
     reducerDispatch({ type: "addEmoji", payload: emoji });
   };
 
-  const EmojiMemo = useCallback(
+  const EmojiMemo = useMemo(
     () => <EmojiList clickHandler={addEmoji} />,
     [emojiSection]
   );
@@ -116,7 +116,7 @@ const MessageForm = () => {
           }}
         />
         <span style={{ display: 'flex', alignItems: 'center' }}>
-          <IconButton size="medium">
+          <IconButton disabled size="medium">
             <FiPaperclip className="icon" />
           </IconButton>
         </span>

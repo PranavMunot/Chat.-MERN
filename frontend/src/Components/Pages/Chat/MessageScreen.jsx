@@ -1,22 +1,26 @@
 import { Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { useRef, useEffect, useContext } from "react";
+import React, { useRef, useState, useEffect, useContext } from "react";
 import "./MessageScreen.css";
 import LoginContext from '../../../State/loginContext/LoginContext'
 import socket from "../../../Sockets/SocketInit";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { friendAction } from "../../../State/Redux/FriendReducer";
+import axios from 'axios'
 
 
 function MessageScreen({ messages }) {
+  const [messageLimit, setMessageLimit] = useState(45)
+  const [isMessageAvailable, setIsMessageAvailable] = useState(true)
   const messagesColumnRef = useRef(null);
   const auth = useContext(LoginContext)
   const dispatch = useDispatch()
+  const friend = useSelector(state => state.friend)
 
   useEffect(() => {
     socket.on('recieved-message', (message) => {
-      console.log('useEffectRan')
       dispatch(friendAction.addMessageToRedux({ message }))
+
     })
   }, [])
 
@@ -25,12 +29,22 @@ function MessageScreen({ messages }) {
       messagesColumnRef.current.scrollHeight;
   }, [messages]);
 
-  const callApi = () => {
-    console.log('checking more messages')
+  const getMoreMessages = async (scrollPosition) => {
+
+    isMessageAvailable && await axios.post('http://localhost:4000/api/v1/messages/getMessages', { to: friend.friendId, limit: messageLimit })
+      .then(({ data }) => {
+        if (data.foundMessages.length < messageLimit) {
+          setIsMessageAvailable(false)
+        }
+        messagesColumnRef.current.scrollTop = Math.floor(scrollPosition);
+        setMessageLimit((prev) => (prev + 15))
+        dispatch(friendAction.addMultipleMessagesToRedux({ messages: data.foundMessages }))
+      })
+      .catch(error => console.log(error))
   }
 
   return (
-    <div className={`messageScreen`} onScroll={(e) => { return e.target.scrollTop === 0 ? callApi() : null }} ref={messagesColumnRef}>
+    <div className={`messageScreen`} onScroll={(e) => { return e.target.scrollTop === 0 && getMoreMessages(e.target.scrollTop) }} ref={messagesColumnRef}>
       {messages.map((message, index) => {
         return (
           <Box

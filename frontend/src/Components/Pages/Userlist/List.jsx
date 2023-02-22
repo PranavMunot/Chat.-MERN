@@ -7,7 +7,6 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import image from "../../../TestImages/cld-sample-2.jpg";
 import "./UserList.css";
 import axios from "axios";
 import socket from "../../../Sockets/SocketInit";
@@ -20,7 +19,7 @@ const ListItem = ({ friendId, friendName, friendChatCode, friendProfilePhoto, fr
   const dispatch = useDispatch()
 
   const handelFriendSelection = async () => {
-    await axios.post('http://localhost:4000/api/v1/messages/getMessages', { to: friendId })
+    await axios.post('http://localhost:4000/api/v1/messages/getMessages', { to: friendId, limit: 30 })
       .then(({ data }) => dispatch(
         friendAction.selectedUser(
           { friendId, friendName, friendProfilePhoto, friendChatCode, messages: data.foundMessages, friendAccountCreatedAt }
@@ -48,7 +47,7 @@ const ListItem = ({ friendId, friendName, friendChatCode, friendProfilePhoto, fr
           onClick={() => { handelFriendSelection() }}
         >
           <CardMedia>
-            <img src={friendProfilePhoto ? friendProfilePhoto.secure_url : image} className="listUserImage" alt="userImage" />
+            <img src={friendProfilePhoto && friendProfilePhoto.secure_url} className="listUserImage" alt="userImage" />
           </CardMedia>
           <CardContent
             sx={{

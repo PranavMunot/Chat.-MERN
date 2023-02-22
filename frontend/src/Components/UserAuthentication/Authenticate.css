@@ -3,8 +3,17 @@
     height: 100vh;
     box-sizing:content-box;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+}
+.userImages{
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 5px;
+}
+.userImages:hover{
+background-color: aliceblue;
 }
 .LoginBox{
     width: 300px;
