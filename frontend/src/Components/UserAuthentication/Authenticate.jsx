@@ -138,6 +138,7 @@ function Authenticate() {
 
 
     const SignupHandler = async (e) => {
+      e.preventDefault()
       await axios
         .post("http://localhost:4000/api/v1/signup", {
           name: name,
@@ -146,7 +147,7 @@ function Authenticate() {
           profilePhoto: profilePhoto,
         }, {
           headers: {
-            'Content-type': 'multipart/form-data',
+            "Content-Type": "multipart/form-data",
           }
         })
         .then(({ data }) => {
@@ -172,7 +173,7 @@ function Authenticate() {
     };
 
     return (
-      <form>
+      <form onSubmit={SignupHandler} method="POST" encType="multipart/form-data">
         <Box className="LoginBox">
           <label htmlFor="userNameInput">
             <Typography sx={{ my: 0.5 }} variant="body1">
@@ -239,7 +240,7 @@ function Authenticate() {
             fullWidth
             sx={{ mt: 2 }}
             variant="contained"
-            onClick={SignupHandler}
+            type="submit"
           >
             Sign Up
           </Button>
