@@ -1,7 +1,7 @@
 # Chat.-MERN
+### Currently in Dev.
 ## v1.0.0
 This Application is a chatting application where users can connect with other users using a special 6 character secret chat code.
-### currently you can run this locally only as this is still in dev but you can access basic features of adding and chatting with users.
 
 ## Frontend
 
