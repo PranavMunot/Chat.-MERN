@@ -1,5 +1,5 @@
-import React, { useState, useReducer, useMemo } from "react";
-import { Box, IconButton, TextField } from "@mui/material";
+import React, { useState, useReducer, useMemo, useRef, useEffect } from "react";
+import { Alert, Box, IconButton, Snackbar, TextField } from "@mui/material";
 import { IoSend } from "react-icons/io5";
 import { FiPaperclip } from "react-icons/fi";
 import socket from "../../../Sockets/SocketInit";
@@ -51,29 +51,44 @@ const EmojiList = ({ clickHandler }) => {
 const MessageForm = () => {
   const [emojiSection, setEmojiSection] = useState(false);
   const [state, reducerDispatch] = useReducer(inputReducerFunction, "");
+  const [sendError, setSendError] = useState({ status: false, message: '' })
 
+  const inputRef = useRef()
+
+  // useEffect(() => {
+  //   inputRef.current.focus()
+  // }, [])
 
   const friend = useSelector(state => state.friend)
   const reduxDispatch = useDispatch()
 
   const sendMessage = async () => {
-    await axiosInstance.post('/messages/sendMessage', { to: friend.friendId, message: state })
-      .then(({ data }) => {
-        console.log(data.newMessage)
-        reduxDispatch(friendAction.addMessageToRedux({ message: data.newMessage }))
-        socket.emit('send-message-to-friend', { friendChatCode: friend.friendChatCode, message: data.newMessage })
-      })
-      .catch(err => console.log(err))
-    reducerDispatch({ type: "reset" });
+    if (!state || state.trim() === "") {
+      console.log('empty')
+    }
+    else {
+      await axiosInstance.post('/messages/sendMessage', { to: friend.friendId, message: state })
+        .then(({ data }) => {
+          console.log(data.newMessage)
+          reduxDispatch(friendAction.addMessageToRedux({ message: data.newMessage }))
+          socket.emit('send-message-to-friend', { friendChatCode: friend.friendChatCode, message: data.newMessage })
+        })
+        .catch(err => { console.log(err.response); setSendError({ status: true, message: err.response.data.message }) })
+      reducerDispatch({ type: "reset" });
+    }
   };
+
+  const closeSnackbar = () => {
+    setSendError({ status: false, message: '' })
+  }
 
   const addEmoji = (emoji) => {
     reducerDispatch({ type: "addEmoji", payload: emoji });
+    inputRef.current.focus()
   };
 
   const EmojiMemo = useMemo(
-    () => <EmojiList clickHandler={addEmoji} />,
-    [emojiSection]
+    () => <EmojiList clickHandler={addEmoji} />, []
   );
 
   return (
@@ -84,6 +99,7 @@ const MessageForm = () => {
           <IconButton
             onClick={() => {
               setEmojiSection(!emojiSection);
+              inputRef.current.focus()
             }}
           >
             {emojiSection ? "😀" : "😐"}
@@ -103,6 +119,7 @@ const MessageForm = () => {
           color="#103783"
           multiline
           autoFocus
+          ref={inputRef}
           fullWidth
           InputProps={{
             disableUnderline: true,
@@ -116,16 +133,21 @@ const MessageForm = () => {
           }}
         />
         <span style={{ display: 'flex', alignItems: 'center' }}>
-          <IconButton disabled size="medium">
-            <FiPaperclip className="icon" />
+          <IconButton color="primary" disabled size="medium">
+            <FiPaperclip />
           </IconButton>
         </span>
         <span style={{ display: 'flex', alignItems: 'center' }}>
-          <IconButton onClick={sendMessage} size="medium" sx={{ ml: 1 }}>
-            <IoSend className="icon" />
+          <IconButton disabled={!state || state.trim() === ""} color="primary" onClick={sendMessage} size="medium" sx={{ ml: 1 }}>
+            <IoSend />
           </IconButton>
         </span>
       </div>
+      <Snackbar open={sendError.status} autoHideDuration={6000} onClose={closeSnackbar}>
+        <Alert onClose={closeSnackbar} severity="error" sx={{ width: '100%' }}>
+          {sendError.message} Please refresh page.
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

@@ -225,8 +225,6 @@ exports.deleteFriend = async (req, res, next) => {
                 message: 'Delete Failed'
             })
         }
-
-
     }
     return res.status(400).json({
         success: false,

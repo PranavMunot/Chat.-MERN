@@ -11,7 +11,7 @@ import "./UserList.css";
 import { axiosInstance } from "../../../api/axios";
 import socket from "../../../Sockets/SocketInit";
 import { Box } from "@mui/system";
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { friendAction } from '../../../State/Redux/FriendReducer'
 
 const ListItem = ({ friendId, friendName, friendChatCode, friendProfilePhoto, friendAccountCreatedAt }) => {
@@ -82,7 +82,10 @@ const ListItem = ({ friendId, friendName, friendChatCode, friendProfilePhoto, fr
 
 function List() {
 
+  const friend = useSelector(state => state.friend)
   const [userFriendList, setUserFriendList] = useState({ isLoading: true, data: [] })
+  const [currUser, setCurrUser] = useState()
+
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -98,13 +101,18 @@ function List() {
       setUserFriendList({ ...userFriendList, data: [...userFriendList.data, payload.user] })
     })
     socket.on('delete_user_after_accept', (payload) => {
-      // setUserFriendList({ ...userFriendList, data: [...userFriendList.data, payload.user] })
-      setUserFriendList({
-        ...userFriendList, data: userFriendList.data.filter((user) => (user._id === payload.user._id))
-      })
-      dispatch(friendAction.clearAllData())
+      setCurrUser(payload.user)
+      console.log('delete')
     })
   })
+
+  useEffect(() => {
+    setUserFriendList({
+      ...userFriendList, data: userFriendList.data.filter((user) => (user.id === currUser.id))
+    })
+    if (currUser?.id === friend?.friendId)
+      dispatch(friendAction.clearAllData())
+  }, [currUser])
 
   return (
     <div className="list">

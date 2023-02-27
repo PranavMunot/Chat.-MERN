@@ -16,30 +16,20 @@ function MessageScreen({ messages }) {
   const auth = useContext(LoginContext)
   const dispatch = useDispatch()
   const friend = useSelector(state => state.friend)
-  const [currFrnd, setCurrFrnd] = useState(friend?.friendId)
+  const [currMessage, setCurrMessage] = useState()
 
   useEffect(() => {
-    console.log('change in friend', friend.friendId)
-    let count = 0
     socket.on('recieved-message', (payload) => {
-      setCurrFrnd(prevValue => prevValue)
-      count++
-      console.log(count)
-      console.log(`self socket id:${friend.friendId}, to: ${payload.message.to}, from:${payload.message.from}`)
-      console.log(`*********************CURRID: ${currFrnd}`)
       if (payload.message.from === friend.friendId) {
-        dispatch(friendAction.addMessageToRedux({ message: payload.message }))
+        setCurrMessage(payload.message)
       }
     })
-
-    return (() => {
-      count = 0
-    })
-  }, [])
+  })
 
   useEffect(() => {
-    setCurrFrnd(friend.friendId)
-  }, [friend.friendId])
+    console.log(friend.friendId, currMessage?.from)
+    if (friend.friendId === currMessage?.from) dispatch(friendAction.addMessageToRedux({ message: currMessage }));
+  }, [currMessage])
 
   useEffect(() => {
     messagesColumnRef.current.scrollTop =
