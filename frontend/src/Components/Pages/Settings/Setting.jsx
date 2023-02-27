@@ -31,15 +31,16 @@ function Setting() {
       <div className="userProfileInfo">
         <Typography component={"div"} variant="h3" sx={{ fontSize: "22px" }}>
           {auth.user.user.name}
-          <span className="chatCode">{auth.user.user.chatCode}</span>
+
         </Typography>
         <Typography
           component={"div"}
           variant="h5"
           sx={{ fontSize: "12px", pb: 1 }}
         >
-          <span className="statusBar" />
-          Active
+          <span className="chatCode">{auth.user.user.chatCode}</span>
+          {/* <span className="statusBar" />
+          Active */}
         </Typography>
         <Typography component={"div"} variant="h5" sx={{ fontSize: "12px" }}>
           on Chat. Since{" "}
@@ -50,16 +51,16 @@ function Setting() {
         <ButtonGroup
           disableElevation
           variant="outlined"
-          fullWidth
-          sx={{ mb: 2, bgcolor: 'rgba(235, 244, 245,1)' }}
+
+          sx={{ mb: 2, bgcolor: 'rgba(235, 244, 245,1)', width: '100%' }}
           aria-label="Disabled elevation buttons"
         >
-          <Button>
+          <Button sx={{ flex: 1 }}>
             <Typography variant="button" fontSize={"14px"}>
               Settings
             </Typography>
           </Button>
-          <Button onClick={logoutHandler}>
+          <Button sx={{ flex: 1 }} onClick={logoutHandler}>
             <Typography variant="button" fontSize={"14px"}>
               Logout
             </Typography>

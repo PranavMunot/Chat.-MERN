@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import "./UserList.css";
-import axios from "axios";
+import { axiosInstance } from "../../../api/axios";
 import socket from "../../../Sockets/SocketInit";
 import { Box } from "@mui/system";
 import { useDispatch } from 'react-redux'
@@ -19,7 +19,7 @@ const ListItem = ({ friendId, friendName, friendChatCode, friendProfilePhoto, fr
   const dispatch = useDispatch()
 
   const handelFriendSelection = async () => {
-    await axios.post('http://localhost:4000/api/v1/messages/getMessages', { to: friendId, limit: 30 })
+    await axiosInstance.post('/messages/getMessages', { to: friendId, limit: 30 })
       .then(({ data }) => dispatch(
         friendAction.selectedUser(
           { friendId, friendName, friendProfilePhoto, friendChatCode, messages: data.foundMessages, friendAccountCreatedAt }
@@ -83,10 +83,11 @@ const ListItem = ({ friendId, friendName, friendChatCode, friendProfilePhoto, fr
 function List() {
 
   const [userFriendList, setUserFriendList] = useState({ isLoading: true, data: [] })
+  const dispatch = useDispatch()
 
   useEffect(() => {
     (async () => {
-      await axios.get('http://localhost:4000/api/v1/getMultipleUsersById').then(
+      await axiosInstance.get('/getMultipleUsersById').then(
         ({ data }) => { setUserFriendList({ isLoading: false, data: data.data }) }
       ).catch(err => { console.log(err) })
     })()
@@ -96,7 +97,13 @@ function List() {
     socket.on('get_user_after_accept', (payload) => {
       setUserFriendList({ ...userFriendList, data: [...userFriendList.data, payload.user] })
     })
-
+    socket.on('delete_user_after_accept', (payload) => {
+      // setUserFriendList({ ...userFriendList, data: [...userFriendList.data, payload.user] })
+      setUserFriendList({
+        ...userFriendList, data: userFriendList.data.filter((user) => (user._id === payload.user._id))
+      })
+      dispatch(friendAction.clearAllData())
+    })
   })
 
   return (

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./ChatDetails.css";
 import { format } from "date-fns";
 import {
@@ -6,16 +6,19 @@ import {
   Button,
   Chip,
   Typography,
+  CircularProgress
 } from "@mui/material";
 import { useContext } from "react";
 import LoginContext from "../../../State/loginContext/LoginContext";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { axiosInstance } from '../../../api/axios'
+import { friendAction } from '../../../State/Redux/FriendReducer'
 
 const ClientDetailBox = () => {
 
   const friend = useSelector(state => state.friend)
-
   const auth = useContext(LoginContext);
+
   return (
     <>
       <Box className="clientDetailBox">
@@ -113,10 +116,29 @@ const MediaController = () => {
 };
 
 const OnClientActions = () => {
+
+  const friend = useSelector(state => state.friend)
+  const dispatch = useDispatch()
+  const [isRemoving, setRemoving] = useState(false)
+
+  async function removeHandler() {
+    setRemoving(true)
+    try {
+      const response = await axiosInstance.delete('/deleteFriend', { data: { friendId: friend.friendId } })
+      console.log(response.data)
+      setRemoving(false)
+      dispatch(friendAction.clearAllData())
+    } catch (error) {
+      console.log(error.response.status)
+      console.log(error.response.data)
+      setRemoving(false)
+    }
+  }
+
   return (
     <>
-      <Button variant="contained" size="small" color="error">
-        Remove Friend
+      <Button variant="contained" onClick={removeHandler} sx={{ textTransform: 'none' }} disabled={!friend.isFriendSelected || isRemoving} size="small" color="error">
+        {isRemoving ? (<><CircularProgress size={'20px'} sx={{ mr: 2 }} color={'error'} /> Removing Friend</>) : `Remove Friend`}
       </Button>
     </>
   );

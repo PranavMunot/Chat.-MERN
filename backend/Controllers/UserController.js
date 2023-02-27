@@ -1,4 +1,6 @@
+const mongoose = require('mongoose')
 const User = require('../Database/Model/UserModel')
+const Message = require('../Database/Model/MessageModel')
 const bcrypt = require('bcryptjs')
 const cloudinary = require('cloudinary').v2
 const getCookieToken = require('../Utils/Cookies')
@@ -162,6 +164,74 @@ exports.sendFriendRequest = async (req, res, next) => {
         message: 'Error sending request!'
     })
 
+}
+
+exports.deleteFriend = async (req, res, next) => {
+
+    const userId = req.user.id
+    const { friendId } = req.body
+    console.log(friendId)
+
+    // check if friend is in user's friendlist
+    const [user, friend] = await Promise.all([User.findById(userId), User.findById(friendId)])
+
+    if (!user || !friend) {
+        return res.status(400).json({
+            success: false,
+            message: 'Invalid users'
+        })
+    }
+
+    const isFriend = await User.find({ _id: user.id, friendList: { $in: [friend.id] } }).count() > 0
+    // remove from friend list and reduce friend count amd delete all messages linked
+    if (isFriend) {
+
+        user.noOfFriends -= 1
+        friend.noOfFriends -= 1
+        await User.updateOne({ _id: user._id }, { $pullAll: { friendList: [friend._id] } }).lean()
+        await User.updateOne({ _id: friend._id }, { $pullAll: { friendList: [user._id] } }).lean()
+        const saveResponse = await Promise.allSettled([user.save(), friend.save()])
+
+        const messagesToDelete = await Message.aggregate([{
+            $match: {
+                $or: [{
+                    from: new mongoose.Types.ObjectId(user._id),
+                    to: new mongoose.Types.ObjectId(friend._id)
+                }, {
+                    from: new mongoose.Types.ObjectId(friend._id),
+                    to: new mongoose.Types.ObjectId(user._id)
+                }]
+            }
+        }])
+
+        // delete messages using ids of messages
+        const deletedMessages = await Message.deleteMany({ _id: { $in: messagesToDelete } })
+
+
+        if (deletedMessages.acknowledged && saveResponse) {
+
+            req.app.get('socket').emitToSenderRequest('delete_user_after_accept', { user: friend })
+            req.app.get('socket').emitToRecieverRequest('delete_user_after_accept', { user })
+
+            return res.status(200).json({
+                success: true,
+                message: `${saveResponse[1].value.name} was Removed`,
+                count: deletedMessages.deletedCount
+            })
+
+        } else {
+            return res.status(400).json({
+                success: false,
+                message: 'Delete Failed'
+            })
+        }
+
+
+    }
+    return res.status(400).json({
+        success: false,
+        message: 'No user was Linked'
+    })
 }
 
 exports.getRequests = async (req, res, next) => {

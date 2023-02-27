@@ -6,10 +6,10 @@ import './App.css';
 import { BrowserRouter as Router } from 'react-router-dom';
 import LoginContext from './State/loginContext/LoginContext';
 import lightTheme from './Utils/LightTheme';
-import axios from 'axios'
+import { axiosInstance } from './api/axios'
 import Cookies from 'js-cookie';
 import socket from './Sockets/SocketInit'
-import { Box, CircularProgress } from '@mui/material'
+import { Box, CircularProgress, Snackbar } from '@mui/material'
 
 
 function App() {
@@ -23,11 +23,9 @@ function App() {
   }
 
   const logout = async () => {
-    await axios.get('http://localhost:4000/api/v1/logout')
+    await axiosInstance.get('/logout')
       .then((data) => {
-        // console.log(data.data); 
         Cookies.remove('token');
-
         setLogIn(false);
         setUser(null)
       })
@@ -43,10 +41,11 @@ function App() {
     })
   })
 
+
   useEffect(() => {
     const userToken = Cookies.get('token')
     if (userToken) {
-      axios.get('http://localhost:4000/api/v1/getUser')
+      axiosInstance.get('/getUser')
         .then(
           ({ data }) => {
             setUser(data);

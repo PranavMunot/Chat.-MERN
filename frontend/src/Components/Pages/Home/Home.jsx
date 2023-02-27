@@ -10,7 +10,7 @@ function Home() {
   return (
     <div>
       <Navigation />
-      {!auth.isAuthenticated ? 'Not Logged In' : (<Link to={`/chat/${auth.user.user.chatCode}`}><p>To User Page</p></Link>)}
+      {!auth.isAuthenticated ? 'Not Logged In' : (<Link to={`/chat`}><p>To User Page</p></Link>)}
     </div>
   )
 }

@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 
 import React, { useState } from "react";
-import axios from 'axios'
+import { axiosInstance } from '../../../api/axios'
 import "./Requests.css";
 import ListComponent from "./ListComponent";
 import { AiOutlineUserAdd } from "react-icons/ai";
@@ -36,7 +36,7 @@ function Requests() {
   }
 
   const sendRequest = async () => {
-    await axios.post('http://localhost:4000/api/v1/sendRequest', { chatCode }).then(
+    await axiosInstance.post('/sendRequest', { chatCode }).then(
       ({ data }) => {
         console.log(data)
         if (data.success) {
@@ -130,7 +130,7 @@ function Requests() {
           variant='fullWidth'
           onChange={handleListStatus}
           size="small"
-          fullWidth
+
           sx={{ mb: 1, bgcolor: 'rgba(235, 244, 245,1)', borderRadius: 1 }}>
           <Tab value={'sent'} label={<Typography
             variant="h4"

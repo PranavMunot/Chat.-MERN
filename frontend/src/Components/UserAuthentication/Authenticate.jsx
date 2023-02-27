@@ -1,7 +1,7 @@
 import React, { useState, useContext, useRef } from "react";
 import { Box, Button, TextField, InputAdornment, Typography, IconButton } from "@mui/material";
 import "./Authenticate.css";
-import axios from "axios";
+import { axiosInstance } from "../../api/axios";
 import LoginContext from "../../State/loginContext/LoginContext";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
@@ -19,8 +19,8 @@ const Login = () => {
   const auth = useContext(LoginContext);
 
   const LoginHandler = async (e) => {
-    await axios
-      .post("http://localhost:4000/api/v1/login", {
+    await axiosInstance
+      .post("/login", {
         email: Email,
         password: Password,
       })
@@ -139,8 +139,8 @@ function Authenticate() {
 
     const SignupHandler = async (e) => {
       e.preventDefault()
-      await axios
-        .post("http://localhost:4000/api/v1/signup", {
+      await axiosInstance
+        .post("/signup", {
           name: name,
           email: email,
           password: password,

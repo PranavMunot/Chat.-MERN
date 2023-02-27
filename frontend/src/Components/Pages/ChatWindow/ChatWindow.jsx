@@ -13,6 +13,13 @@ function ChatWindow() {
   const auth = useContext(LoginContext)
 
   useEffect(() => {
+
+    socket.on('reconnect', () => {
+      console.log(`reC`)
+    })
+  })
+
+  useEffect(() => {
     socket.emit('online-user', { userId: auth.user.user.chatCode })
   }, [auth.user.user.chatCode])
 

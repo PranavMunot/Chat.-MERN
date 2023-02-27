@@ -3,7 +3,7 @@ import { Box, IconButton, TextField } from "@mui/material";
 import { IoSend } from "react-icons/io5";
 import { FiPaperclip } from "react-icons/fi";
 import socket from "../../../Sockets/SocketInit";
-import axios from "axios";
+import { axiosInstance } from '../../../api/axios'
 import { useSelector, useDispatch } from "react-redux";
 import { friendAction } from "../../../State/Redux/FriendReducer";
 const emojis = require("emojis-list");
@@ -57,7 +57,7 @@ const MessageForm = () => {
   const reduxDispatch = useDispatch()
 
   const sendMessage = async () => {
-    await axios.post('http://localhost:4000/api/v1/messages/sendMessage', { to: friend.friendId, message: state })
+    await axiosInstance.post('/messages/sendMessage', { to: friend.friendId, message: state })
       .then(({ data }) => {
         console.log(data.newMessage)
         reduxDispatch(friendAction.addMessageToRedux({ message: data.newMessage }))

@@ -32,12 +32,13 @@ class SocketService {
 
             socket.on('send-message-to-friend', ({ friendChatCode, message }) => {
                 let sendingMessageToUser = onlineUsers.get(friendChatCode)
-                this.io.to(sendingMessageToUser).emit('recieved-message', message)
+                this.io.to(sendingMessageToUser).emit('recieved-message', { to: sendingMessageToUser, from: socket.id, message })
             })
 
             socket.on('disconnect', (reason) => {
-                console.log(`disConnected ${socket.id}`)
+                console.log(`disConnected ${socket.id} due to ${reason}`)
                 console.log(onlineUsers)
+
                 onlineUsers.delete(socket.id)
             })
         })
