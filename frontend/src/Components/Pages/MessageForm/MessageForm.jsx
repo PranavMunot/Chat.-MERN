@@ -1,5 +1,5 @@
 import React, { useState, useReducer, useMemo, useRef, useEffect } from "react";
-import { Alert, Box, IconButton, Snackbar, TextField } from "@mui/material";
+import { Alert, Box, CircularProgress, IconButton, Snackbar, TextField } from "@mui/material";
 import { IoSend } from "react-icons/io5";
 import { FiPaperclip } from "react-icons/fi";
 import socket from "../../../Sockets/SocketInit";
@@ -52,12 +52,9 @@ const MessageForm = () => {
   const [emojiSection, setEmojiSection] = useState(false);
   const [state, reducerDispatch] = useReducer(inputReducerFunction, "");
   const [sendError, setSendError] = useState({ status: false, message: '' })
+  const [sendMessageLoading, setSendMessageLoading] = useState(false)
 
   const inputRef = useRef()
-
-  // useEffect(() => {
-  //   inputRef.current.focus()
-  // }, [])
 
   const friend = useSelector(state => state.friend)
   const reduxDispatch = useDispatch()
@@ -67,13 +64,15 @@ const MessageForm = () => {
       console.log('empty')
     }
     else {
+      setSendMessageLoading(true)
       await axiosInstance.post('/messages/sendMessage', { to: friend.friendId, message: state })
         .then(({ data }) => {
-          console.log(data.newMessage)
+          // console.log(data.newMessage)
+          setSendMessageLoading(false)
           reduxDispatch(friendAction.addMessageToRedux({ message: data.newMessage }))
           socket.emit('send-message-to-friend', { friendChatCode: friend.friendChatCode, message: data.newMessage })
         })
-        .catch(err => { console.log(err.response); setSendError({ status: true, message: err.response.data.message }) })
+        .catch(err => { console.log(err.response); setSendMessageLoading(false); setSendError({ status: true, message: err.response.data.message }) })
       reducerDispatch({ type: "reset" });
     }
   };
@@ -138,14 +137,15 @@ const MessageForm = () => {
           </IconButton>
         </span>
         <span style={{ display: 'flex', alignItems: 'center' }}>
-          <IconButton disabled={!state || state.trim() === ""} color="primary" onClick={sendMessage} size="medium" sx={{ ml: 1 }}>
+          {!sendMessageLoading ? (<IconButton disabled={!state || state.trim() === ""} color="primary" onClick={sendMessage} size="medium" sx={{ ml: 1 }}>
             <IoSend />
-          </IconButton>
+          </IconButton>) :
+            (<CircularProgress size={'1.5rem'} sx={{ ml: 2, mr: 1 }} />)}
         </span>
       </div>
       <Snackbar open={sendError.status} autoHideDuration={6000} onClose={closeSnackbar}>
         <Alert onClose={closeSnackbar} severity="error" sx={{ width: '100%' }}>
-          {sendError.message} Please refresh page.
+          {sendError.message} Please refresh the browser.
         </Alert>
       </Snackbar>
     </div>

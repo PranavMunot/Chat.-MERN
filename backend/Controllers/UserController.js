@@ -9,7 +9,7 @@ const errorMessage = require('../Utils/errorMessage')
 
 exports.login = async (req, res, next) => {
     const { email, password } = req.body;
-    console.log(email, password)
+
     const user = await User.findOne({ email }).select('+password')
     if (!user) {
         return errorMessage(res, 400, 'User Not Found!')
@@ -40,7 +40,7 @@ exports.signup = async (req, res, next) => {
 
     const file = req.files && req.files.profilePhoto
 
-    console.log(name, email, password, file)
+
 
     let profileImage;
 
@@ -170,7 +170,7 @@ exports.deleteFriend = async (req, res, next) => {
 
     const userId = req.user.id
     const { friendId } = req.body
-    console.log(friendId)
+    // console.log(friendId)
 
     // check if friend is in user's friendlist
     const [user, friend] = await Promise.all([User.findById(userId), User.findById(friendId)])

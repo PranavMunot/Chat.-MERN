@@ -95,8 +95,8 @@ const MediaController = () => {
             label="Images"
             size="small"
             component="a"
-            href="#basic-chip"
             clickable
+            disabled
             sx={{ mr: 1 }}
           />
           <Chip
@@ -104,12 +104,15 @@ const MediaController = () => {
             size="small"
             component="a"
             variant="outlined"
-            href="#basic-chip"
+            disabled
             clickable
           />
         </Box>
-        <Box className="media-Images"></Box>
+        <Box className="media-Images">
+          <Typography fontSize={'1rem'} color={'primary'}>Feature yet to be released!</Typography>
+        </Box>
         <Box className="media-Links"></Box>
+
       </Box>
     </>
   );

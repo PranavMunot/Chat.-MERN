@@ -1,6 +1,6 @@
 import React from "react";
 import "./Chat.css";
-import { Typography } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import MessageScreen from "./MessageScreen";
 import MessageForm from "../MessageForm/MessageForm";
 import { useSelector } from "react-redux";
@@ -23,17 +23,26 @@ function Chat() {
 
   return (
     <div className={`chatGrid ${friend.isFriendSelected ? 'chat_screen' : 'null_chat_screen'}`}>
-      {friend.isFriendSelected ? (
+      {friend.isFriendLoading ? (
+        <Box className="null_chat_text">
+          <CircularProgress />
+        </Box>
+      ) : (
         <>
-          <div className="chatInfo">
-            <ChatInfo profilePhoto={friend.friendProfilePhoto.secure_url} friendName={friend.friendName} />
-          </div>
-          <MessageScreen messages={friend.friendMessages} />
-          <MessageForm />
-        </>) :
-        (<div className="null_chat_text">
-          <Typography color={'text.secondary'} variant='h5'>Select a friend to Chat.</Typography>
-        </div>)}
+          {friend.isFriendSelected ? (
+            <>
+              <div className="chatInfo">
+                <ChatInfo profilePhoto={friend.friendProfilePhoto.secure_url} friendName={friend.friendName} />
+              </div>
+              <MessageScreen messages={friend.friendMessages} />
+              <MessageForm />
+            </>) :
+            (<div className="null_chat_text">
+              <Typography color={'text.secondary'} variant='h5'>Select a friend to Chat.</Typography>
+            </div>)
+          }
+        </>)
+      }
     </div>
   );
 }

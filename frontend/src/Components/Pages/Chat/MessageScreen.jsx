@@ -27,7 +27,7 @@ function MessageScreen({ messages }) {
   })
 
   useEffect(() => {
-    console.log(friend.friendId, currMessage?.from)
+    // console.log(friend.friendId, currMessage?.from)
     if (friend.friendId === currMessage?.from) dispatch(friendAction.addMessageToRedux({ message: currMessage }));
   }, [currMessage])
 

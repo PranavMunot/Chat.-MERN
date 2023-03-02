@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialFriendState = {
+    isFriendLoading: false,
     isFriendSelected: false,
     friendId: '',
     friendName: '',
@@ -26,6 +27,9 @@ const friendSlice = createSlice({
             state.friendChatCode = action.payload.friendChatCode
             state.friendMessages = action.payload.messages
             state.friendAccountCreatedAt = action.payload.friendAccountCreatedAt
+        },
+        fetchingUser(state, action) {
+            state.isFriendLoading = action.payload.status
         },
         addMessageToRedux(state, action) {
             state.friendMessages = [...state.friendMessages, action.payload.message]
