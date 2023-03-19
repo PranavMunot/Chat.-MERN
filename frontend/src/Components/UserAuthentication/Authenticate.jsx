@@ -1,5 +1,5 @@
 import React, { useState, useContext, useRef } from "react";
-import { Box, Button, TextField, InputAdornment, Typography, IconButton } from "@mui/material";
+import { Box, Button, TextField, InputAdornment, Typography, IconButton, CircularProgress } from "@mui/material";
 import "./Authenticate.css";
 import { axiosInstance } from "../../api/axios";
 import LoginContext from "../../State/loginContext/LoginContext";
@@ -14,11 +14,26 @@ const Login = () => {
   const [Email, setEmail] = useState("");
   const [Error, setError] = useState([false, ""]);
   const [Password, setPassword] = useState("");
+  const [isApiLoading, setApiLoading] = useState(false)
   const [isPasswordVisible, setPasswordVisible] = useState(true)
 
   const auth = useContext(LoginContext);
 
   const LoginHandler = async (e) => {
+
+    if (Email.trim() === '' || Password.trim() === '') {
+      setError([true, 'Please fill all the fields'])
+      return null
+    }
+    if (!Email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)+(\.\w{2,3})+$/)) {
+      setError([true, 'Please enter a valid Email'])
+      return null
+    }
+    if (Password.trim().length < 6 || Password.trim().length > 16) {
+      setError([true, 'Password should be between 6 to 16 characters'])
+      return null
+    }
+    setApiLoading(true)
     await axiosInstance
       .post("/login", {
         email: Email,
@@ -28,17 +43,19 @@ const Login = () => {
         auth.setUser(data);
         auth.login();
         Cookies.set("token", data.token, { expires: 1, secure: true });
+        setApiLoading(false)
         navigate("/");
       })
       .catch((error) => {
         if (error.response) {
           console.log(error.response.status, error.response.data);
-          setError([!Error[0], error.response.data.message]);
+          setError([true, error.response.data.message]);
         } else if (error.request) {
           console.log(error.request);
         } else {
           console.log("Error", error.message);
         }
+        setApiLoading(false)
         setEmail("");
         setPassword("");
       });
@@ -57,7 +74,6 @@ const Login = () => {
     } else {
       setPassword(e.target.value);
     }
-    // checkValidity();
   };
 
   return (
@@ -86,8 +102,8 @@ const Login = () => {
           type={isPasswordVisible ? 'password' : 'text'}
           size="small"
           id="passwordInput"
-          error={Error[0]}
-          helperText={Error[0] ? Error[1] : null}
+          // error={Error[0]}
+          // helperText={Error[0] ? Error[1] : null}
           fullWidth
           variant="outlined"
           name="password"
@@ -98,14 +114,17 @@ const Login = () => {
           }}
 
         />
-        <Box></Box>
+        {Error[0] ? <Box>
+          <Typography variant="caption" color={'error'}>{Error[1]}</Typography>
+        </Box> : null}
         <Button
           fullWidth
           sx={{ mt: 2 }}
           onClick={LoginHandler}
           variant="contained"
+          disabled={isApiLoading}
         >
-          Login
+          {isApiLoading ? <CircularProgress size={'1.4rem'} sx={{ my: 0.5 }} /> : 'Login'}
         </Button>
 
       </form>
@@ -114,147 +133,174 @@ const Login = () => {
 };
 
 
+const Signup = () => {
+  const navigate = useNavigate();
+  const auth = useContext(LoginContext);
+  const [isPasswordVisible, setPasswordVisible] = useState(true)
+  const [isApiLoading, setApiLoading] = useState(false)
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [profilePhoto, setProfilePhoto] = useState('')
+  const [Error, setError] = useState([false, ""]);
+
+  const profilePhotoRef = useRef(null)
+
+  const profilePhotoHandler = () => {
+    profilePhotoRef.current.value = null;
+    setProfilePhoto('')
+  }
+
+
+
+  const SignupHandler = async (e) => {
+    e.preventDefault()
+    if (email.trim() === '' || password.trim() === '') {
+      setError([true, 'Please fill all the fields'])
+      return null
+    }
+    if (!email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)+(\.\w{2,3})+$/)) {
+      setError([true, 'Please enter a valid Email'])
+      return null
+    }
+    if (password.trim().length < 6 || password.trim().length > 16) {
+      setError([true, 'Password should be between 6 to 16 characters'])
+      return null
+    }
+    setApiLoading(true)
+    await axiosInstance
+      .post("/signup", {
+        name: name,
+        email: email,
+        password: password,
+        profilePhoto: profilePhoto,
+      }, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        }
+      })
+      .then(({ data }) => {
+        auth.setUser(data);
+        auth.login();
+        Cookies.set("token", data.token, { expires: 1, secure: true });
+        setApiLoading(false)
+        navigate("/");
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response.status, error.response.data);
+          setError([!Error[0], error.response.data.message]);
+        } else if (error.request) {
+          console.log(error.request);
+        } else {
+          console.log("Error", error.message);
+        }
+        setEmail("");
+        setPassword("");
+        setName('');
+        setApiLoading(true)
+        profilePhotoHandler()
+      });
+  };
+
+  return (
+    <form onSubmit={SignupHandler} method="POST" encType="multipart/form-data">
+      <Box className="LoginBox">
+        <label htmlFor="userNameInput">
+          <Typography sx={{ my: 0.5 }} variant="body1">
+            User Name
+          </Typography>
+        </label>
+        <TextField
+          size="small"
+          id="userNameInput"
+          fullWidth
+          variant="outlined"
+          name="name"
+          required
+          value={name}
+          onChange={(event) => { setName(event.target.value) }}
+        />
+        <label htmlFor="emailInput">
+          <Typography sx={{ my: 0.5 }} variant="body1">
+            Email
+          </Typography>
+        </label>
+        <TextField
+          size="small"
+          id="emailInput"
+          fullWidth
+          variant="outlined"
+          name="email"
+          required
+          value={email}
+          onChange={(e) => { setEmail(e.target.value) }}
+        />
+
+        <label htmlFor="passwordInput">
+          <Typography sx={{ my: 0.5 }} variant="body1">
+            Password
+          </Typography>
+        </label>
+        <TextField
+          type={isPasswordVisible ? 'password' : 'text'}
+          size="small"
+          id="passwordInput"
+
+          fullWidth
+          variant="outlined"
+          name="password"
+          required
+          value={password}
+          onChange={(e) => { setPassword(e.target.value) }}
+          InputProps={{
+            endAdornment: <InputAdornment style={{ color: '#103783', fontSize: '1rem', margin: 'auto', cursor: 'pointer', textAlign: 'center' }} onClick={() => { setPasswordVisible(!isPasswordVisible) }} position="start">{isPasswordVisible ? <AiOutlineEyeInvisible /> : < AiOutlineEye />}</InputAdornment>,
+          }}
+        />
+
+        <Typography sx={{ my: 0.5 }} variant="body1">
+          Upload Avatar
+        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <input type='file' className="inputBtn" ref={profilePhotoRef} onChange={(e) => { setProfilePhoto(e.target.files[0]) }} />
+          {profilePhoto && (<IconButton variant='button' onClick={profilePhotoHandler}><FiDelete /></IconButton>)}
+        </Box>
+
+        {Error[0] ? <Box>
+          <Typography variant="caption" color={'error'}>{Error[1]}</Typography>
+        </Box> : null}
+
+        <Button
+          fullWidth
+          sx={{ mt: 2 }}
+          variant="contained"
+          type="submit"
+          disabled={isApiLoading}
+        >
+          {isApiLoading ? <CircularProgress size={'1.4rem'} sx={{ my: 0.5 }} /> : 'Signup'}
+        </Button>
+      </Box>
+    </form>
+  )
+};
+
+
+
 function Authenticate() {
 
   const [isLoginPage, setLoginPage] = useState(true)
 
 
-  const Signup = () => {
-    const navigate = useNavigate();
-    const auth = useContext(LoginContext);
-    const [isPasswordVisible, setPasswordVisible] = useState(true)
-    const [name, setName] = useState('')
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [profilePhoto, setProfilePhoto] = useState('')
-    const [Error, setError] = useState([false, ""]);
-
-    const profilePhotoRef = useRef(null)
-
-    const profilePhotoHandler = () => {
-      profilePhotoRef.current.value = null;
-      setProfilePhoto('')
-    }
-
-
-    const SignupHandler = async (e) => {
-      e.preventDefault()
-      await axiosInstance
-        .post("/signup", {
-          name: name,
-          email: email,
-          password: password,
-          profilePhoto: profilePhoto,
-        }, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          }
-        })
-        .then(({ data }) => {
-          auth.setUser(data);
-          auth.login();
-          Cookies.set("token", data.token, { expires: 1, secure: true });
-          navigate("/");
-        })
-        .catch((error) => {
-          if (error.response) {
-            console.log(error.response.status, error.response.data);
-            setError([!Error[0], error.response.data.message]);
-          } else if (error.request) {
-            console.log(error.request);
-          } else {
-            console.log("Error", error.message);
-          }
-          setEmail("");
-          setPassword("");
-          setName('');
-          profilePhotoHandler()
-        });
-    };
-
-    return (
-      <form onSubmit={SignupHandler} method="POST" encType="multipart/form-data">
-        <Box className="LoginBox">
-          <label htmlFor="userNameInput">
-            <Typography sx={{ my: 0.5 }} variant="body1">
-              User Name
-            </Typography>
-          </label>
-          <TextField
-            size="small"
-            id="userNameInput"
-            fullWidth
-            variant="outlined"
-            name="name"
-            required
-            value={name}
-            onChange={(event) => { setName(event.target.value) }}
-          />
-          <label htmlFor="emailInput">
-            <Typography sx={{ my: 0.5 }} variant="body1">
-              Email
-            </Typography>
-          </label>
-          <TextField
-            size="small"
-            id="emailInput"
-            fullWidth
-            variant="outlined"
-            name="email"
-            required
-            value={email}
-            onChange={(e) => { setEmail(e.target.value) }}
-          />
-
-          <label htmlFor="passwordInput">
-            <Typography sx={{ my: 0.5 }} variant="body1">
-              Password
-            </Typography>
-          </label>
-          <TextField
-            type={isPasswordVisible ? 'password' : 'text'}
-            size="small"
-            id="passwordInput"
-            error={Error[0]}
-            helperText={Error[0] ? Error[1] : null}
-            fullWidth
-            variant="outlined"
-            name="password"
-            required
-            value={password}
-            onChange={(e) => { setPassword(e.target.value) }}
-            InputProps={{
-              endAdornment: <InputAdornment style={{ color: '#103783', fontSize: '1rem', margin: 'auto', cursor: 'pointer', textAlign: 'center' }} onClick={() => { setPasswordVisible(!isPasswordVisible) }} position="start">{isPasswordVisible ? <AiOutlineEyeInvisible /> : < AiOutlineEye />}</InputAdornment>,
-            }}
-          />
-
-          <Typography sx={{ my: 0.5 }} variant="body1">
-            Upload Avatar
-          </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <input type='file' className="inputBtn" ref={profilePhotoRef} onChange={(e) => { setProfilePhoto(e.target.files[0]) }} />
-            {profilePhoto && (<IconButton variant='button' onClick={profilePhotoHandler}><FiDelete /></IconButton>)}
-          </Box>
-
-          <Button
-            fullWidth
-            sx={{ mt: 2 }}
-            variant="contained"
-            type="submit"
-          >
-            Sign Up
-          </Button>
-        </Box>
-      </form>
-    )
-  };
-
   return (
-    <div className="AuthBox">{isLoginPage ? <Login /> : <Signup />}
+
+    <div className="AuthBox">
+      <Typography variant="h2" fontSize={'5rem'} sx={{ pb: 2 }} textAlign={'start'} fontWeight={'400'}>Chat.</Typography>
+      {isLoginPage ? <Login /> : <Signup />}
       <Button onClick={() => { setLoginPage(!isLoginPage) }} sx={{ textTransform: 'none', mt: 2 }} variant="text" disableRipple={true}>
         {isLoginPage ? `New to Chat.?` : `Already a Chat. User?`}
       </Button>
     </div>
+
   );
 }
 

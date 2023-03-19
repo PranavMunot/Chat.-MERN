@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import LoginContext from '../../../State/loginContext/LoginContext'
 import { Link } from 'react-router-dom'
 import Navigation from '../../Navigation/Navigation'
+import { Button } from '@mui/material'
 
 function Home() {
 
@@ -10,7 +11,15 @@ function Home() {
   return (
     <div>
       <Navigation />
-      {!auth.isAuthenticated ? 'Not Logged In' : (<Link to={`/chat`}><p>To User Page</p></Link>)}
+      {!auth.isAuthenticated ? 'Please Login to access Chat.' : (<Link to={`/chat`}>
+        <Button
+          sx={{ mt: 2 }}
+          variant="contained"
+          type="submit"
+        >
+          To Chat.
+        </Button>
+      </Link>)}
     </div>
   )
 }

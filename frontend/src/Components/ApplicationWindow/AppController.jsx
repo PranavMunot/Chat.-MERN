@@ -18,13 +18,11 @@ function AppController() {
     return (
       <>
         <Provider store={store}>
-
           <Routes>
             <Route path='/' element={<Home />} />
             <Route path='/chat' element={<ChatWindow />} />
             <Route path='*' element={<Navigate to={'/'} />} />
           </Routes>
-
         </Provider>
       </>
 
