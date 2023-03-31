@@ -189,7 +189,7 @@ const Signup = () => {
       .catch((error) => {
         if (error.response) {
           console.log(error.response.status, error.response.data);
-          setError([!Error[0], error.response.data.message]);
+          setError([true, error.response.data.message]);
         } else if (error.request) {
           console.log(error.request);
         } else {
@@ -198,7 +198,7 @@ const Signup = () => {
         setEmail("");
         setPassword("");
         setName('');
-        setApiLoading(true)
+        setApiLoading(false)
         profilePhotoHandler()
       });
   };

@@ -47,7 +47,7 @@ exports.signup = async (req, res, next) => {
     if (!name || !email || !password) {
         return res.status(400).json({
             success: false,
-            errorMsg: 'Please enter proper name, Email, Password'
+            message: 'Please enter proper name, Email, Password'
         })
     }
 
@@ -56,7 +56,7 @@ exports.signup = async (req, res, next) => {
     if (isUserPresent > 0) {
         return res.status(400).json({
             success: false,
-            errorMsg: 'User already exists! Please Login'
+            message: 'User already exists! Please Login'
         })
     }
 
