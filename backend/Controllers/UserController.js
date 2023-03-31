@@ -51,6 +51,15 @@ exports.signup = async (req, res, next) => {
         })
     }
 
+    const isUserPresent = await User.findOne({ email }).lean().count()
+
+    if (isUserPresent > 0) {
+        return res.status(400).json({
+            success: false,
+            errorMsg: 'User already exists! Please Login'
+        })
+    }
+
     if (file) {
         profileImage = await cloudinary.uploader.upload(file.tempFilePath, {
             folder: 'Chat Users',
@@ -79,7 +88,6 @@ exports.signup = async (req, res, next) => {
     user.password = undefined
 
     res.status(201).json({
-
         success: true,
         token,
         user
