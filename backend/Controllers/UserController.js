@@ -60,8 +60,8 @@ exports.signup = async (req, res, next) => {
         })
     } else {
         profileImage = {
-            "public_id": "Chat Users/pnewk3qaomps5cpwqp2h",
-            "secure_url": "https://res.cloudinary.com/cloudinaryapplication/image/upload/v1677056444/Chat%20Users/pnewk3qaomps5cpwqp2h.png"
+            "public_id": "Chat Users/user_af5lur",
+            "secure_url": "https://res.cloudinary.com/cloudinaryapplication/image/upload/v1680259195/user_af5lur.png"
         }
     }
 
