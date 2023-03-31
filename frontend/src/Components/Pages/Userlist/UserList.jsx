@@ -10,9 +10,10 @@ function UserList() {
         type="text"
         size="small"
         fullWidth
+        disabled
         sx={{ mb: 1, backgroundColor: "#fff", borderRadius: "15px" }}
         variant="outlined"
-        placeholder="Search User/ Group"
+        placeholder="Search User"
       />
 
       <List />

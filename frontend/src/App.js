@@ -9,7 +9,8 @@ import lightTheme from './Utils/LightTheme';
 import { axiosInstance } from './api/axios'
 import Cookies from 'js-cookie';
 import socket from './Sockets/SocketInit'
-import { Box, CircularProgress, Snackbar } from '@mui/material'
+import { Box, CircularProgress, Snackbar, useMediaQuery, Typography } from '@mui/material'
+import Navigation from './Components/Navigation/Navigation';
 
 
 function App() {
@@ -17,6 +18,8 @@ function App() {
   const [isLoggedIn, setLogIn] = useState(false)
   const [isUserLoading, setUserLoading] = useState(true);
   const [isDuplicate, setIsDuplicate] = useState(false)
+
+  const isSmallScreen = useMediaQuery('(max-width:1000px)')
 
   const login = () => {
     setLogIn(true)
@@ -74,7 +77,20 @@ function App() {
                       <CircularProgress color='primary' />
                     </Box>
                     :
-                    <AppController />}
+                    (
+                      <>
+                        {isSmallScreen ? (
+                          <Box sx={{ width: '100%', height: '90vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
+                            <h2>Chat.</h2>
+                            <Typography textAlign={'center'}>
+                              Please use bigger screen for better viewing experience
+                            </Typography>
+                          </Box>
+                        ) : (< AppController />)
+                        }
+                      </>
+                    )
+                  }
                 </>
               )
                 :
@@ -82,7 +98,7 @@ function App() {
             </LoginContext.Provider>
           </Router>
         </Container>
-      </ThemeProvider>
+      </ThemeProvider >
     </>
   );
 }
