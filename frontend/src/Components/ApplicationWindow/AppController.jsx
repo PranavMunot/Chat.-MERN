@@ -6,6 +6,7 @@ import Home from '../Pages/Home/Home'
 import ChatWindow from '../Pages/ChatWindow/ChatWindow'
 import { Provider } from "react-redux";
 import store from '../../State/Redux/Store'
+import UserSetting from '../Pages/UserSettings/UserSetting'
 
 
 function AppController() {
@@ -21,6 +22,7 @@ function AppController() {
           <Routes>
             <Route path='/' element={<Home />} />
             <Route path='/chat' element={<ChatWindow />} />
+            <Route path='/settings' element={<UserSetting />} />
             <Route path='*' element={<Navigate to={'/'} />} />
           </Routes>
         </Provider>

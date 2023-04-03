@@ -7,10 +7,12 @@ import { format } from "date-fns";
 import Requests from "../RequestList/Requests";
 import { useDispatch } from "react-redux";
 import { friendAction } from "../../../State/Redux/FriendReducer";
+import { useNavigate } from "react-router-dom";
 
 function Setting() {
   const auth = useContext(LoginContext);
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const logoutHandler = () => {
     auth.logout();
@@ -55,7 +57,7 @@ function Setting() {
           sx={{ mb: 2, bgcolor: 'rgba(235, 244, 245,1)', width: '100%' }}
           aria-label="Disabled elevation buttons"
         >
-          <Button sx={{ flex: 1 }}>
+          <Button onClick={() => { navigate('/settings') }} sx={{ flex: 1 }}>
             <Typography variant="button" fontSize={"14px"}>
               Settings
             </Typography>

@@ -180,24 +180,26 @@ function List() {
               <Box sx={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
                 <Typography variant="body1" fontSize={'0.8rem'} >😕Hey! seems like no friends here?😕 </Typography>
                 {/* <Typography variant="body1" fontSize={'0.8rem'} >Enter friend's 6-digit chat code </Typography> */}
-                <Box sx={{ display: "flex ", mt: 2 }}>
+                <Box sx={{ display: "flex ", mt: 2, flexDirection: 'column', alignItems: 'center' }}>
                   <TextField
                     placeholder="Friend's Chat code"
                     name="chatCode"
                     onChange={changeHandler}
                     value={chatCode}
-                    sx={{ mr: 1 }}
+                    sx={{ backgroundColor: 'secondary.light', borderRadius: '8px' }}
                     variant="outlined"
                     size="small"
                   />
                   <Button
                     disabled={!isChatCodeValid}
-                    disableElevation
+                    // disableElevation
                     variant="contained"
                     size="small"
+                    color="secondary"
                     onClick={sendRequest}
+                    sx={{ textTransform: 'none', mt: 1 }}
                   >
-                    Send
+                    Send Request
                   </Button>
                 </Box>
               </Box>
