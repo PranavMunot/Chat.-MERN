@@ -2,6 +2,8 @@
 
 ### Currently in Development.
 
+Application Live @[CHAT.](http://chatdot.netlify.app/).
+
 ## v1.0.0
 
 This Application is a chatting application where users can connect with other users using a special 6 character secret chat code.
