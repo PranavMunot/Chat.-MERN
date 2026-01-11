@@ -5,9 +5,10 @@ const bcrypt = require('bcryptjs')
 const cloudinary = require('cloudinary').v2
 const getCookieToken = require('../Utils/Cookies')
 const errorMessage = require('../Utils/errorMessage')
+const asyncHandler = require('../Utils/asyncHandler')
 
 
-exports.login = async (req, res, next) => {
+exports.login = asyncHandler(async (req, res, next) => {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email }).select('+password')
@@ -20,7 +21,7 @@ exports.login = async (req, res, next) => {
     }
     getCookieToken(user, res)
 
-}
+})
 
 exports.logout = async (req, res, next) => {
 

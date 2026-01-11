@@ -1,4 +1,4 @@
-import React from "react";
+
 import "./Setting.css";
 import LoginContext from "../../../State/loginContext/LoginContext";
 import { useContext } from "react";

@@ -22,7 +22,7 @@ const ListItem = ({ friendId, friendName, friendChatCode, friendProfilePhoto, fr
 
   const handelFriendSelection = async () => {
     dispatch(friendAction.fetchingUser({ status: true }))
-    await axiosInstance.post('/messages/getMessages', { to: friendId, limit: 30 })
+    await axiosInstance.post('/messages/getMessages', { to: friendId, limit: 15 })
       .then(({ data }) => {
         dispatch(friendAction.selectedUser({ friendId, friendName, friendProfilePhoto, friendChatCode, messages: data.foundMessages, friendAccountCreatedAt }))
         dispatch(friendAction.fetchingUser({ status: false }))

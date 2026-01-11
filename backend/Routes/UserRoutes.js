@@ -15,7 +15,8 @@ const {
     getUser,
     acceptRequest,
     getMultipleUsersById,
-    deleteFriend } = require('../Controllers/UserController')
+    deleteFriend
+} = require('../Controllers/UserController')
 
 router.route('/login').post(login)
 router.route('/logout').get(isLoggedIn, logout)

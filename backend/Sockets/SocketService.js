@@ -2,7 +2,7 @@ const socketio = require('socket.io')
 
 class SocketService {
     // private variables
-    #innerSocket //private variable to save inner socket 
+    #innerSocket
 
     constructor(server) {
         this.#innerSocket = null

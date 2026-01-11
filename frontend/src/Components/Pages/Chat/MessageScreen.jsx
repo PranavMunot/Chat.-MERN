@@ -1,6 +1,6 @@
 import { Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { useRef, useState, useEffect, useContext } from "react";
+import { useRef, useState, useEffect, useContext } from "react";
 import "./MessageScreen.css";
 import LoginContext from '../../../State/loginContext/LoginContext'
 import socket from "../../../Sockets/SocketInit";
@@ -10,12 +10,15 @@ import { axiosInstance } from '../../../api/axios'
 
 
 function MessageScreen({ messages }) {
-  const [messageLimit, setMessageLimit] = useState(45)
+  const [messageLimit, setMessageLimit] = useState(30)
   const [isMessageAvailable, setIsMessageAvailable] = useState(true)
   const messagesColumnRef = useRef(null);
+
   const auth = useContext(LoginContext)
+
   const dispatch = useDispatch()
   const friend = useSelector(state => state.friend)
+
   const [currMessage, setCurrMessage] = useState()
 
   useEffect(() => {
@@ -27,7 +30,6 @@ function MessageScreen({ messages }) {
   })
 
   useEffect(() => {
-    // console.log(friend.friendId, currMessage?.from)
     if (friend.friendId === currMessage?.from) dispatch(friendAction.addMessageToRedux({ message: currMessage }));
   }, [currMessage])
 
@@ -38,20 +40,33 @@ function MessageScreen({ messages }) {
 
   const getMoreMessages = async (scrollPosition) => {
 
-    isMessageAvailable && await axiosInstance.post('/messages/getMessages', { to: friend.friendId, limit: messageLimit })
-      .then(({ data }) => {
-        if (data.foundMessages.length < messageLimit) {
-          setIsMessageAvailable(false)
-        }
-        messagesColumnRef.current.scrollTop = Math.floor(scrollPosition);
-        setMessageLimit((prev) => (prev + 15))
-        dispatch(friendAction.addMultipleMessagesToRedux({ messages: data.foundMessages }))
-      })
-      .catch(error => console.log(error))
+    const prevScrollHeight = messagesColumnRef.current.scrollHeight;
+    if (isMessageAvailable) {
+      await axiosInstance.post('/messages/getMessages', { to: friend.friendId, limit: messageLimit })
+        .then(({ data }) => {
+          if (data.foundMessages.length < messageLimit) {
+            setIsMessageAvailable(false)
+          }
+          setMessageLimit((prev) => (prev + 15))
+          dispatch(friendAction.addMultipleMessagesToRedux({ messages: data.foundMessages }))
+          setTimeout(() => {
+            messagesColumnRef.current.scrollTop = Math.floor(messagesColumnRef.current.scrollHeight - prevScrollHeight);
+          })
+
+
+        })
+        .catch(error => console.log(error))
+    }
   }
 
   return (
-    <div className={`messageScreen`} onScroll={(e) => { return e.target.scrollTop === 0 && getMoreMessages(e.target.scrollTop) }} ref={messagesColumnRef}>
+    <div
+      className={`messageScreen`}
+      onScroll={(e) => {
+        return e.target.scrollTop === 0 && getMoreMessages(e.target.scrollTop)
+      }}
+      ref={messagesColumnRef}
+    >
       {messages.map((message, index) => {
         return (
           <Box

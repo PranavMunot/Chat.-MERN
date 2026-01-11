@@ -35,7 +35,8 @@ exports.sendMessage = async (req, res, next) => {
 
 exports.getMessages = async (req, res, next) => {
     const from = req.user._id
-    const { to, limit } = req.body
+    const { to, limit } = req.body, defaultMessageLimit = 15;
+    console.log(limit)
 
     const foundMessages = await Message.aggregate([{
         $match: {
@@ -49,7 +50,7 @@ exports.getMessages = async (req, res, next) => {
         }
     },
     { $sort: { createdAt: -1 } },
-    { $limit: limit ? limit : 15 },
+    { $limit: limit ? limit : defaultMessageLimit },
     { $sort: { createdAt: 1 } },
     ])
 
