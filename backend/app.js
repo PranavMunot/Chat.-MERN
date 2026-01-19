@@ -22,7 +22,7 @@ app.use(fileUpload({
 }))
 // all third-party middlewares
 app.use(cors({
-    origin: 'https://chatdot.netlify.app/',
+    origin: 'https://chatdot.netlify.app',
     credentials: true,
 
 }))
