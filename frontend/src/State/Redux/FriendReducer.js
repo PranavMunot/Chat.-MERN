@@ -32,7 +32,7 @@ const friendSlice = createSlice({
             state.isFriendLoading = action.payload.status
         },
         addMessageToRedux(state, action) {
-            state.friendMessages = [...state.friendMessages, action.payload.message]
+            state.friendMessages = [...state.friendMessages, action.payload.message,]
         },
         addMultipleMessagesToRedux(state, action) {
             state.friendMessages = [...action.payload.messages]

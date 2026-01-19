@@ -1,10 +1,8 @@
-import React, { useState, useContext, useRef } from "react";
+import { useState, useRef } from "react";
 import { Box, Button, TextField, InputAdornment, Typography, IconButton, CircularProgress } from "@mui/material";
 import "./Authenticate.css";
-import { axiosInstance } from "../../api/axios";
-import LoginContext from "../../State/loginContext/LoginContext";
+import useAuth from "../../State/loginContext/LoginContext";
 import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 import { FiDelete } from 'react-icons/fi'
 
@@ -17,52 +15,48 @@ const Login = () => {
   const [isApiLoading, setApiLoading] = useState(false)
   const [isPasswordVisible, setPasswordVisible] = useState(true)
 
-  const auth = useContext(LoginContext);
+  const auth = useAuth();
 
   const LoginHandler = async (e) => {
-
-    if (Email.trim() === '' || Password.trim() === '') {
-      setError([true, 'Please fill all the fields'])
-      return null
-    }
-    if (!Email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)+(\.\w{2,3})+$/)) {
-      setError([true, 'Please enter a valid Email'])
-      return null
-    }
-    if (Password.trim().length < 6 || Password.trim().length > 16) {
-      setError([true, 'Password should be between 6 to 16 characters'])
-      return null
-    }
-    setApiLoading(true)
-    await axiosInstance
-      .post("/login", {
+    try {
+      if (Email.trim() === '' || Password.trim() === '') {
+        setError([true, 'Please fill all the fields'])
+        return null
+      }
+      if (!Email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)+(\.\w{2,3})+$/)) {
+        setError([true, 'Please enter a valid Email'])
+        return null
+      }
+      if (Password.trim().length < 6 || Password.trim().length > 16) {
+        setError([true, 'Password should be between 6 to 16 characters'])
+        return null
+      }
+      setApiLoading(true)
+      await auth.login({
         email: Email,
         password: Password,
-      })
-      .then(({ data }) => {
-        auth.setUser(data);
-        auth.login();
-        Cookies.set("token", data.token, { expires: 1, secure: true });
-        setApiLoading(false)
-        navigate("/");
-      })
-      .catch((error) => {
-        if (error.response) {
-          console.log(error.response.status, error.response.data);
-          setError([true, error.response.data.message]);
-        } else if (error.request) {
-          console.log(error.request);
-        } else {
-          console.log("Error", error.message);
+      }).then((data) => {
+        if (data) {
+          setEmail("");
+          setPassword("");
+          navigate('/')
         }
-        setApiLoading(false)
-        setEmail("");
-        setPassword("");
-      });
-  };
-
-  const checkValidity = () => {
-    // console.log(Email, Password);
+      })
+    } catch (error) {
+      if (error.response) {
+        console.error("Error", error.response.status, error.response.data);
+        setError([true, error.response.data.message]);
+      } else if (error.request) {
+        console.error("Error", error.request);
+      } else {
+        console.error("Error", error.message);
+        setError([true, error.message]);
+      }
+      setEmail("");
+      setPassword("");
+    } finally {
+      setApiLoading(false);
+    }
   };
 
   const changeHandler = (e) => {
@@ -102,8 +96,7 @@ const Login = () => {
           type={isPasswordVisible ? 'password' : 'text'}
           size="small"
           id="passwordInput"
-          // error={Error[0]}
-          // helperText={Error[0] ? Error[1] : null}
+
           fullWidth
           variant="outlined"
           name="password"
@@ -135,7 +128,8 @@ const Login = () => {
 
 const Signup = () => {
   const navigate = useNavigate();
-  const auth = useContext(LoginContext);
+  const auth = useAuth();
+
   const [isPasswordVisible, setPasswordVisible] = useState(true)
   const [isApiLoading, setApiLoading] = useState(false)
   const [name, setName] = useState('')
@@ -154,53 +148,48 @@ const Signup = () => {
 
 
   const SignupHandler = async (e) => {
-    e.preventDefault()
-    if (email.trim() === '' || password.trim() === '') {
-      setError([true, 'Please fill all the fields'])
-      return null
-    }
-    if (!email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)+(\.\w{2,3})+$/)) {
-      setError([true, 'Please enter a valid Email'])
-      return null
-    }
-    if (password.trim().length < 6 || password.trim().length > 16) {
-      setError([true, 'Password should be between 6 to 16 characters'])
-      return null
-    }
-    setApiLoading(true)
-    await axiosInstance
-      .post("/signup", {
+    e.preventDefault();
+    try {
+      if (email.trim() === '' || password.trim() === '') {
+        setError([true, 'Please fill all the fields'])
+        return null
+      }
+      if (!email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)+(\.\w{2,3})+$/)) {
+        setError([true, 'Please enter a valid Email'])
+        return null
+      }
+      if (password.trim().length < 6 || password.trim().length > 16) {
+        setError([true, 'Password should be between 6 to 16 characters'])
+        return null
+      }
+      setApiLoading(true);
+      await auth.signUp({
         name: name,
         email: email,
         password: password,
         profilePhoto: profilePhoto,
-      }, {
-        headers: {
-          "Content-Type": "multipart/form-data",
+      }).then((data) => {
+        if (data) {
+          setEmail("");
+          setPassword("");
+          setName('');
+          profilePhotoHandler();
+          navigate("/");
         }
       })
-      .then(({ data }) => {
-        auth.setUser(data);
-        auth.login();
-        Cookies.set("token", data.token, { expires: 1, secure: true });
-        setApiLoading(false)
-        navigate("/");
-      })
-      .catch((error) => {
-        if (error.response) {
-          console.log(error.response.status, error.response.data);
-          setError([true, error.response.data.message]);
-        } else if (error.request) {
-          console.log(error.request);
-        } else {
-          console.log("Error", error.message);
-        }
-        setEmail("");
-        setPassword("");
-        setName('');
-        setApiLoading(false)
-        profilePhotoHandler()
-      });
+    } catch (error) {
+      if (error.response) {
+        console.log(error.response.status, error.response.data);
+        setError([true, error.response.data.message]);
+      } else if (error.request) {
+        console.log(error.request);
+      } else {
+        console.log("Error", error.message);
+      }
+    } finally {
+      setApiLoading(false)
+    }
+
   };
 
   return (

@@ -4,19 +4,9 @@ import { Box, CircularProgress, Typography } from "@mui/material";
 import MessageScreen from "./MessageScreen";
 import MessageForm from "../MessageForm/MessageForm";
 import { useSelector } from "react-redux";
+import ChatInfo from "./ChatInfo";
 
-const ChatInfo = ({ friendName, profilePhoto }) => {
-  return (
-    <>
-      <img src={profilePhoto} className="chatInfoImage" alt="userImage" />
-      <span className="chatInfoText">
-        <Typography sx={{ lineHeight: 1 }} fontWeight={"500"} variant="h1" fontSize={'1.2rem'} color="primary">
-          {friendName}
-        </Typography>
-      </span>
-    </>
-  );
-};
+
 
 function Chat() {
   const friend = useSelector((state) => state.friend)
@@ -34,7 +24,7 @@ function Chat() {
               <div className="chatInfo">
                 <ChatInfo profilePhoto={friend.friendProfilePhoto.secure_url} friendName={friend.friendName} />
               </div>
-              <MessageScreen messages={friend.friendMessages} />
+              <MessageScreen />
               <MessageForm />
             </>) :
             (<div className="null_chat_text">

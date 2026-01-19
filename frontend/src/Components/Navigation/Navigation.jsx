@@ -1,16 +1,15 @@
 import { Badge, Button, IconButton } from "@mui/material";
-import React, { useContext } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import LoginContext from "../../State/loginContext/LoginContext";
+import useAuth from "../../State/loginContext/LoginContext";
 import "./navigation.css";
 import Setting from "../Pages/Settings/Setting";
 import { IoIosNotifications } from 'react-icons/io'
 
 function Navigation() {
   const [isSetting, setSettingToggle] = useState(false);
+  const { isAuthenticated, user } = useAuth();
 
-  const auth = useContext(LoginContext);
   return (
     <div>
       <nav className="navigation">
@@ -18,7 +17,7 @@ function Navigation() {
           <h2>Chat.</h2>
         </div>
         <div className="navigation_list">
-          {auth.isAuthenticated ? (
+          {isAuthenticated ? (
             <>
               <span style={{ paddingRight: '8px' }}>
                 <IconButton>
@@ -27,22 +26,23 @@ function Navigation() {
                   </Badge>
                 </IconButton>
               </span>
-              <span>
-                <IconButton onClick={() => {
-                  setSettingToggle(!isSetting);
-                }}>
-                  <img
-                    className="userImage"
 
-                    src={
-                      auth.user.user.profilePhoto
-                        ? auth.user.user.profilePhoto.secure_url
-                        : ""
-                    }
-                    alt="User Image"
-                  />
-                </IconButton>
-              </span>
+
+              <IconButton onClick={() => {
+                setSettingToggle(!isSetting);
+              }}>
+                <img
+                  className="userImage"
+                  role="button"
+                  src={
+                    user?.user?.profilePhoto
+                      ? user?.user?.profilePhoto.secure_url
+                      : ""
+                  }
+                  alt={user?.user?.name || 'User'}
+                />
+              </IconButton>
+
             </>
           ) : (
             <Link to="/auth">
@@ -50,13 +50,15 @@ function Navigation() {
             </Link>
           )}
         </div>
-        {auth.isAuthenticated && isSetting ? (
-          <span className="settingBar">
-            <Setting />
-          </span>
-        ) : null}
-      </nav>
-    </div>
+        {
+          isAuthenticated && isSetting ? (
+            <span className="settingBar">
+              <Setting />
+            </span>
+          ) : null
+        }
+      </nav >
+    </div >
   );
 }
 

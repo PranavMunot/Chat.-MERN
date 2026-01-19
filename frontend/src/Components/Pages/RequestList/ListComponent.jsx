@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { axiosInstance } from '../../../api/axios'
-import LoginContext from '../../../State/loginContext/LoginContext'
+import useAuth from '../../../State/loginContext/LoginContext'
 import "./Requests.css";
 import {
     Typography,
@@ -8,7 +8,7 @@ import {
     IconButton,
 } from "@mui/material";
 import { TbX, TbCheck } from "react-icons/tb";
-import socket from "../../../Sockets/SocketInit";
+import { useSocket } from "../../../Sockets/useSocket";
 
 const NoListItem = () => {
     return (
@@ -25,7 +25,8 @@ const NoListItem = () => {
 
 const ListComponent = ({ listType }) => {
 
-    const auth = useContext(LoginContext)
+    const auth = useAuth();
+    const { emit } = useSocket();
 
     const [requestListData, setRequestListData] = useState({ isLoading: true, sent: [], recieved: [] })
 
@@ -40,12 +41,12 @@ const ListComponent = ({ listType }) => {
     }, [])
 
     const handleSelection = async (chatCode, acceptStatus) => {
-        socket.emit('recieve-user-add-request', { RecieverChatCode: auth.user.user.chatCode, SenderChatCode: chatCode })
+        emit('recieve-user-add-request', { RecieverChatCode: auth.user.user.chatCode, SenderChatCode: chatCode })
         await axiosInstance.post(`/acceptRequest`, {
             chatCode,
             acceptStatus
         })
-            .then(({ data }) => {
+            .then(({ _ }) => {
                 setRequestListData(prevState => ({
                     ...prevState, isLoading: true
                 }))
@@ -56,8 +57,6 @@ const ListComponent = ({ listType }) => {
 
     return (
         <>
-
-
             {
                 requestListData[listType].length > 0 ? requestListData[listType].map(listData => {
                     return (

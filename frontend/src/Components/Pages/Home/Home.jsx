@@ -1,12 +1,11 @@
-import React, { useContext } from 'react'
-import LoginContext from '../../../State/loginContext/LoginContext'
+import useAuth from '../../../State/loginContext/LoginContext'
 import { Link } from 'react-router-dom'
 import Navigation from '../../Navigation/Navigation'
 import { Button } from '@mui/material'
 
 function Home() {
 
-  const auth = useContext(LoginContext)
+  const auth = useAuth()
 
   return (
     <div>

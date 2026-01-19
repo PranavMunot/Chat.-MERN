@@ -1,7 +1,6 @@
 
 import "./Setting.css";
-import LoginContext from "../../../State/loginContext/LoginContext";
-import { useContext } from "react";
+import useAuth from "../../../State/loginContext/LoginContext";
 import { Box, Divider, ButtonGroup, Button, Typography } from "@mui/material";
 import { format } from "date-fns";
 import Requests from "../RequestList/Requests";
@@ -10,7 +9,7 @@ import { friendAction } from "../../../State/Redux/FriendReducer";
 import { useNavigate } from "react-router-dom";
 
 function Setting() {
-  const auth = useContext(LoginContext);
+  const auth = useAuth();
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -57,9 +56,9 @@ function Setting() {
           sx={{ mb: 2, bgcolor: 'rgba(235, 244, 245,1)', width: '100%' }}
           aria-label="Disabled elevation buttons"
         >
-          <Button onClick={() => { navigate('/settings') }} sx={{ flex: 1 }}>
+          <Button onClick={() => { navigate('/profile') }} sx={{ flex: 1 }}>
             <Typography variant="button" fontSize={"14px"}>
-              Settings
+              Profile
             </Typography>
           </Button>
           <Button sx={{ flex: 1 }} onClick={logoutHandler}>

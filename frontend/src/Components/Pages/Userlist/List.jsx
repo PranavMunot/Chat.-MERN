@@ -8,13 +8,13 @@ import {
   TextField,
   Button
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./UserList.css";
 import { axiosInstance } from "../../../api/axios";
-import socket from "../../../Sockets/SocketInit";
 import { Box } from "@mui/system";
 import { useDispatch, useSelector } from 'react-redux'
 import { friendAction } from '../../../State/Redux/FriendReducer'
+import { useSocketEvent } from "../../../Sockets/useSocket";
 
 const ListItem = ({ friendId, friendName, friendChatCode, friendProfilePhoto, friendAccountCreatedAt }) => {
 
@@ -40,7 +40,9 @@ const ListItem = ({ friendId, friendName, friendChatCode, friendProfilePhoto, fr
         sx={{
           mb: 1.5,
           mr: 1.5,
-          backgroundColor: "rgba(235, 244, 245, 0.8)",
+          //backgroundColor: "rgba(235, 244, 245, 0.8)",
+          backgroundColor: 'transparent',
+          border: 'none'
         }}
       >
         <CardActionArea
@@ -84,7 +86,8 @@ const ListItem = ({ friendId, friendName, friendChatCode, friendProfilePhoto, fr
 function List() {
 
   const friend = useSelector(state => state.friend)
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+
   const [userFriendList, setUserFriendList] = useState({ isLoading: true, data: [] })
   const [currUser, setCurrUser] = useState()
   const [chatCode, setChatCode] = useState("");
@@ -98,9 +101,6 @@ function List() {
       ? setChatCodeValidity(true)
       : setChatCodeValidity(false);
   };
-
-
-
 
   const sendRequest = async () => {
     await axiosInstance.post('/sendRequest', { chatCode }).then(
@@ -130,7 +130,6 @@ function List() {
     })
   }
 
-
   useEffect(() => {
     (async () => {
       await axiosInstance.get('/getMultipleUsersById').then(
@@ -139,15 +138,19 @@ function List() {
     })()
   }, [])
 
-  useEffect(() => {
-    socket.on('get_user_after_accept', (payload) => {
-      setUserFriendList({ ...userFriendList, data: [...userFriendList.data, payload.user] })
-    })
-    socket.on('delete_user_after_accept', (payload) => {
+  useSocketEvent(
+    'get_user_after_accept',
+    (payload) => {
+      setUserFriendList((prevList) => ({ ...prevList, data: [...prevList.data, payload.user] }))
+    }
+  )
+
+  useSocketEvent(
+    'delete_user_after_accept',
+    (payload) => {
       setCurrUser(payload.user)
-      console.log('delete')
-    })
-  })
+    }
+  )
 
   useEffect(() => {
     setUserFriendList({

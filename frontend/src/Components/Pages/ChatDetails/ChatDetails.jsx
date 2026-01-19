@@ -8,8 +8,7 @@ import {
   Typography,
   CircularProgress
 } from "@mui/material";
-import { useContext } from "react";
-import LoginContext from "../../../State/loginContext/LoginContext";
+import useAuth from "../../../State/loginContext/LoginContext";
 import { useDispatch, useSelector } from "react-redux";
 import { axiosInstance } from '../../../api/axios'
 import { friendAction } from '../../../State/Redux/FriendReducer'
@@ -17,7 +16,7 @@ import { friendAction } from '../../../State/Redux/FriendReducer'
 const ClientDetailBox = () => {
 
   const friend = useSelector(state => state.friend)
-  const auth = useContext(LoginContext);
+  const auth = useAuth();
 
   return (
     <>

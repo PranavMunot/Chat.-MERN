@@ -1,42 +1,52 @@
 import { Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { useRef, useState, useEffect, useContext } from "react";
+import { useRef, useState, useEffect, useContext, useLayoutEffect } from "react";
 import "./MessageScreen.css";
-import LoginContext from '../../../State/loginContext/LoginContext'
-import socket from "../../../Sockets/SocketInit";
 import { useSelector, useDispatch } from "react-redux";
 import { friendAction } from "../../../State/Redux/FriendReducer";
 import { axiosInstance } from '../../../api/axios'
 
+import useAuth from '../../../State/loginContext/LoginContext'
+import { useSocketEvent } from "../../../Sockets/useSocket";
 
-function MessageScreen({ messages }) {
+// TODO:
+// virtualise
+// fix scroll height
+
+function MessageScreen() {
   const [messageLimit, setMessageLimit] = useState(30)
   const [isMessageAvailable, setIsMessageAvailable] = useState(true)
   const messagesColumnRef = useRef(null);
 
-  const auth = useContext(LoginContext)
+  const auth = useAuth();
+  const dispatch = useDispatch();
 
-  const dispatch = useDispatch()
-  const friend = useSelector(state => state.friend)
+  const friend = useSelector(state => state.friend);
 
-  const [currMessage, setCurrMessage] = useState()
+  const addMessageFromSocket = async (messageId) => {
+    try {
+      await axiosInstance.post('/messages/getMessageById', {
+        msgId: messageId
+      }).then(({ data: message }) => {
+        console.log('addmessage', message)
+        if (message?.success)
+          dispatch(friendAction.addMessageToRedux({ message: message.data }));
+      })
+    } catch (error) {
+      console.error("Error Message", error)
+    }
+  }
 
-  useEffect(() => {
-    socket.on('recieved-message', (payload) => {
-      if (payload.message.from === friend.friendId) {
-        setCurrMessage(payload.message)
-      }
-    })
+  useSocketEvent('recieved-message', (payload) => {
+    if (payload.messageId) {
+      addMessageFromSocket(payload.messageId)
+    }
   })
 
-  useEffect(() => {
-    if (friend.friendId === currMessage?.from) dispatch(friendAction.addMessageToRedux({ message: currMessage }));
-  }, [currMessage])
-
-  useEffect(() => {
+  useLayoutEffect(() => {
     messagesColumnRef.current.scrollTop =
       messagesColumnRef.current.scrollHeight;
-  }, [messages]);
+  }, [friend?.friendMessages]);
 
   const getMoreMessages = async (scrollPosition) => {
 
@@ -67,7 +77,7 @@ function MessageScreen({ messages }) {
       }}
       ref={messagesColumnRef}
     >
-      {messages.map((message, index) => {
+      {friend?.friendMessages?.map((message, index) => {
         return (
           <Box
             key={index}

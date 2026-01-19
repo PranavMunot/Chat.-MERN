@@ -1,3 +1,9 @@
-.App{
-    position: relative;
+.App {
+  position: relative;
+}
+
+.EmojiPickerReact {
+  --epr-emoji-size: 18px !important;
+  --epr-emoji-gap: 4px !important;
+  --epr-header-padding: 10px 10px !important;
 }
