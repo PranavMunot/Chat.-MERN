@@ -1,5 +1,12 @@
 const socketio = require('socket.io')
 
+const STATUS = {
+    'online': 'online',
+    'offline': 'offline',
+    'typing': 'typing',
+    'thinking': 'thinking'
+}
+
 class SocketService {
     // private variables
     #innerSocket
@@ -17,28 +24,32 @@ class SocketService {
         this.io.on('connection', (socket) => {
             this.#innerSocket = socket
             socket.on('online-user', ({ userId }) => {
-                if (onlineUsers.get(userId)) {
-                    socket.to(onlineUsers.get(userId)).emit('duplicate-tab')
-                }
-                onlineUsers.set(userId, socket.id)
-                console.log(`${socket.id} got added`)
-                console.log(onlineUsers)
+                // if (onlineUsers.get(userId)) {
+                //     socket.to(onlineUsers.get(userId)).emit('duplicate-tab')
+                // }
+                onlineUsers.set(userId, { socketId: socket.id, data: { isOnline: true, currentStatus: STATUS['online'] } })
+                console.log(31, onlineUsers)
             })
 
             socket.on('recieve-user-add-request', ({ RecieverChatCode, SenderChatCode }) => {
-                this.requestRecieverUser = onlineUsers.get(RecieverChatCode)
-                this.requestSenderUser = onlineUsers.get(SenderChatCode)
+                if (onlineUsers.has(RecieverChatCode) && onlineUsers.has(SenderChatCode)) {
+                    this.requestRecieverUser = onlineUsers.get(RecieverChatCode)['socketId']
+                    this.requestSenderUser = onlineUsers.get(SenderChatCode)['socketId']
+                }
             })
 
-            socket.on('send-message-to-friend', ({ friendChatCode, message }) => {
-                let sendingMessageToUser = onlineUsers.get(friendChatCode)
-                this.io.to(sendingMessageToUser).emit('recieved-message', { to: sendingMessageToUser, from: socket.id, message })
+            socket.on('send-message-to-friend', ({ friendChatCode, messageId }) => {
+                if (onlineUsers.has(friendChatCode)) {
+                    let sendingMessageToUser = onlineUsers.get(friendChatCode)['socketId']
+                    // TODO: send message id instead of complete message
+                    this.io.to(sendingMessageToUser).emit('recieved-message', { to: sendingMessageToUser, from: socket.id, messageId })
+                }
+
             })
 
             socket.on('disconnect', (reason) => {
                 console.log(`disConnected ${socket.id} due to ${reason}`)
                 console.log(onlineUsers)
-
                 onlineUsers.delete(socket.id)
             })
         })

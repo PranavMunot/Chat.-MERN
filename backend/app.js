@@ -2,10 +2,12 @@ const express = require('express')
 const fileUpload = require('express-fileupload')
 const morgan = require("morgan")
 const cookieParser = require('cookie-parser')
+const cors = require('cors')
+const cloudinary = require('cloudinary').v2;
+
 const userRoute = require('./Routes/UserRoutes')
 const messageRoute = require('./Routes/MessageRoutes')
-const cors = require('cors')
-const cloudinary = require('cloudinary').v2
+
 const app = express()
 
 // express middlewares
@@ -19,7 +21,11 @@ app.use(fileUpload({
     limits: { fileSize: 50 * 1024 * 1024 },
 }))
 // all third-party middlewares
-app.use(cors())
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+
+}))
 app.use(cookieParser())
 app.use(morgan('dev'))
 

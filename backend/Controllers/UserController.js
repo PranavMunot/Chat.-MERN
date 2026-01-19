@@ -8,6 +8,7 @@ const errorMessage = require('../Utils/errorMessage')
 const asyncHandler = require('../Utils/asyncHandler')
 
 
+
 exports.login = asyncHandler(async (req, res, next) => {
     const { email, password } = req.body;
 
@@ -19,17 +20,16 @@ exports.login = asyncHandler(async (req, res, next) => {
     if (!verifiedUser) {
         return errorMessage(res, 400, 'User Name/ Password entered is wrong. Please try again!')
     }
-    getCookieToken(user, res)
-
+    getCookieToken(200, user, res)
 })
 
 exports.logout = async (req, res, next) => {
 
-    res.cookie('token', null, {
-        expires: new Date(Date.now()), httpOnly: true
-    })
-
-    return res.status(200).json({
+    res.status(200).clearCookie('token', {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'None'
+    }).json({
         success: 'true',
         message: 'User logged out success fully!'
     })
@@ -41,14 +41,12 @@ exports.signup = async (req, res, next) => {
 
     const file = req.files && req.files.profilePhoto
 
-
-
     let profileImage;
 
     if (!name || !email || !password) {
         return res.status(400).json({
             success: false,
-            message: 'Please enter proper name, Email, Password'
+            message: 'Please enter Name, Email, Password in correct format.'
         })
     }
 
@@ -77,22 +75,12 @@ exports.signup = async (req, res, next) => {
 
     req.body.profilePhoto = { id: profileImage.public_id, secure_url: profileImage.secure_url }
 
-
-
     // create unique 6-digit alpha-numeric code
     req.body.chatCode = Math.random().toString(36).slice(2, 8);
 
-    const user = await User.create(req.body)
+    const user = await User.create(req.body);
 
-    const token = await user.createJWT()
-
-    user.password = undefined
-
-    res.status(201).json({
-        success: true,
-        token,
-        user
-    })
+    getCookieToken(201, user, res);
 }
 
 exports.getUser = async (req, res, next) => {

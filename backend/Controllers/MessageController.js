@@ -60,3 +60,27 @@ exports.getMessages = async (req, res, next) => {
         foundMessages
     })
 }
+
+exports.getMessageById = async (req, res) => {
+    // TODO: get messageid and return message
+    const { msgId } = req.body;
+
+    if (!msgId) return res.status(400).send({
+        success: false,
+        message: 'No Message id available!'
+    });
+    try {
+        const message = await Message.findById(msgId).exec()
+        console.log(message)
+        if (!message) return res.status(200).send({
+            success: true,
+            data: null,
+        });
+        return res.status(200).send({
+            success: true,
+            data: message,
+        });
+    } catch (e) {
+        throw new Error(`Error getting message ${e}`)
+    }
+}
