@@ -35,7 +35,7 @@ export const SocketProvider = function ({ children }) {
 
         Socket.on('disconnect', (reason) => {
             setConnected(false);
-            console.log('[Socket] Disconnected:', reason);
+            // console.log('[Socket] Disconnected:', reason);
 
             // Auto-reconnect for certain disconnect reasons
             if (reason === 'io server disconnect') {

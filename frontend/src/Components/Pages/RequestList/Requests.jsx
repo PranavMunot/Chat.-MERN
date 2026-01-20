@@ -38,7 +38,7 @@ function Requests() {
   const sendRequest = async () => {
     await axiosInstance.post('/sendRequest', { chatCode }).then(
       ({ data }) => {
-        console.log(data)
+        // console.log(data)
         if (data.success) {
           setChatCode('')
           setChatCodeValidity(false)
@@ -55,7 +55,7 @@ function Requests() {
         }
       }
     ).catch(err => {
-      console.log(err)
+      // console.log(err)
       setHelperMessage({ isShowing: true, message: 'Error in sending request!' })
       setTimeout(() => {
         setHelperMessage({ isShowing: false, message: '' })

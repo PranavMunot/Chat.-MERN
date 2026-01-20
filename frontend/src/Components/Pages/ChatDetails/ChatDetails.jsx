@@ -127,12 +127,12 @@ const OnClientActions = () => {
     setRemoving(true)
     try {
       const response = await axiosInstance.delete('/deleteFriend', { data: { friendId: friend.friendId } })
-      console.log(response.data)
+      // console.log(response.data)
       setRemoving(false)
       dispatch(friendAction.clearAllData())
     } catch (error) {
-      console.log(error.response.status)
-      console.log(error.response.data)
+      // console.log(error.response.status)
+      // console.log(error.response.data)
       setRemoving(false)
     }
   }

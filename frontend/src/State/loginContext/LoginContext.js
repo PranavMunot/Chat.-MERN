@@ -81,7 +81,7 @@ export const AuthProvider = function ({ children }) {
                 setUser(null)
             })
             .catch((error => {
-                console.log(error.response.status, error.response.data);
+                // console.log(error.response.status, error.response.data);
             }))
     }
 

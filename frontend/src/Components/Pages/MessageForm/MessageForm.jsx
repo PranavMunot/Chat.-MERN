@@ -38,19 +38,18 @@ const MessageForm = () => {
   const reduxDispatch = useDispatch()
 
   const sendMessage = async () => {
-    if (!state || state.trim() === "") {
-      console.log('empty')
-    }
-    else {
+    if (state || state.trim() !== "") {
       setSendMessageLoading(true)
       await axiosInstance.post('/messages/sendMessage', { to: friend.friendId, message: state })
         .then(({ data }) => {
-          console.log(data)
           setSendMessageLoading(false)
           reduxDispatch(friendAction.addMessageToRedux({ message: data.newMessage }))
           emit('send-message-to-friend', { friendChatCode: friend.friendChatCode, messageId: data.newMessage._id })
         })
-        .catch(err => { console.log(err.response); setSendMessageLoading(false); setSendError({ status: true, message: err.response.data.message }) })
+        .catch(err => {
+          setSendMessageLoading(false);
+          setSendError({ status: true, message: err.response.data.message })
+        })
       reducerDispatch({ type: "reset" });
     }
   };

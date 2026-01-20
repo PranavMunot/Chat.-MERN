@@ -33,7 +33,9 @@ const ListComponent = ({ listType }) => {
     const getUserData = async () => {
         await axiosInstance.get(`/getRequests`)
             .then(res => { setRequestListData({ isLoading: false, sent: res.data.sent, recieved: res.data.recieved }) })
-            .catch(err => { console.log(`Error in getting GET REQUESST API: ${err}`) })
+            .catch(err => {
+                // console.log(`Error in getting GET REQUESST API: ${err}`)
+            })
     }
 
     useEffect(() => {
@@ -52,7 +54,9 @@ const ListComponent = ({ listType }) => {
                 }))
                 getUserData()
             })
-            .catch(err => { console.log(err) })
+            .catch(err => {
+                // console.log(err)
+            })
     }
 
     return (

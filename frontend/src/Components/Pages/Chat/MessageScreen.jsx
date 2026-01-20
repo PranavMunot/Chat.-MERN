@@ -28,7 +28,6 @@ function MessageScreen() {
       await axiosInstance.post('/messages/getMessageById', {
         msgId: messageId
       }).then(({ data: message }) => {
-        console.log('addmessage', message)
         if (message?.success)
           dispatch(friendAction.addMessageToRedux({ message: message.data }));
       })
@@ -65,7 +64,9 @@ function MessageScreen() {
 
 
         })
-        .catch(error => console.log(error))
+        .catch(error => {
+          // console.error(error)
+        })
     }
   }
 

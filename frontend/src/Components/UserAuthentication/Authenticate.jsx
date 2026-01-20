@@ -179,12 +179,14 @@ const Signup = () => {
       })
     } catch (error) {
       if (error.response) {
-        console.log(error.response.status, error.response.data);
+        // console.log(error.response.status, error.response.data);
         setError([true, error.response.data.message]);
       } else if (error.request) {
-        console.log(error.request);
+        // console.log(error.request);
+        setError([true, 'Opps something went wrong!']);
       } else {
-        console.log("Error", error.message);
+        // console.log("Error", error.message);
+        setError([true, 'Opps something went wrong!']);
       }
     } finally {
       setApiLoading(false)
