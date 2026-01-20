@@ -55,7 +55,11 @@ export const AuthProvider = function ({ children }) {
 
     const signUp = async (signUpData) => {
         try {
-            const response = await axiosInstance.post("/signup", signUpData);
+            const response = await axiosInstance.post("/signup", signUpData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                }
+            });
             if (!response?.data?.success) {
                 throw new Error(response.data.message || 'Signup failed');
             }
