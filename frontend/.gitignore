@@ -5,6 +5,7 @@
 /.pnp
 .env
 .pnp.js
+audit-report.json
 
 # testing
 /coverage
